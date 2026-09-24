@@ -13,14 +13,16 @@ class MahasiswaController extends Controller
         return view('mahasiswa.index', compact('mahasiswa'));
     }
 
-    // public function store(Request $request)
-    // {
-    //     $data = $request->validate([
-    //         'nama' => 'required',
-    //         'nim' => 'required',
-    //         'email' => 'required'
-    //     ]);
+    public function store(Request $request)
+    {
+        $data = $request->validate([
+            'nama' => 'required',
+            'nim' => 'required',
+            'email' => 'required'
+        ]);
+
+        Mahasiswa::create($data);
         
-    //     return back()->with('success', 'Data diterima!');
-    // }
+        return redirect('/mahasiswa')->with('success', 'Data berhasil disimpan!');
+    }
 }

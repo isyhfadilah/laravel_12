@@ -18,7 +18,7 @@ class MahasiswaController extends Controller
         $data = $request->validate([
             'nama' => 'required',
             'nim' => 'required',
-            'email' => 'required'
+            'email' => 'required|email',
         ]);
 
         Mahasiswa::create($data);

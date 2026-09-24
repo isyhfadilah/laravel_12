@@ -11,11 +11,4 @@ class Mahasiswa extends Model
         'nim',
         'email',
     ];
-    
-    // Mahasiswa::create(
-    //     $request->only(['nama', 'nim', 'email'])
-    // );
-
-    // $mahasiswa = Mahasiswa::all();
-    // return view('mahasiswa.index', compact('mahasiswa'));
 }

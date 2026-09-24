@@ -16,5 +16,19 @@
 
         <button type="submit">Simpan</button>
     </form>
+
+    @if($errors->any())
+        <ul>
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    @endif
+
+    <ul>
+        @foreach($mahasiswa as $mhs)
+            <li>{{ $mhs->nama }} - {{ $mhs->nim }} - {{ $mhs->email }}</li>
+        @endforeach
+    </ul>
 </body>
 </html>

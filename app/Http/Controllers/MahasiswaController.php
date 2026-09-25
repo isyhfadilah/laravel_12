@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Models\Mahasiswa;
 
 class MahasiswaController extends Controller
@@ -17,8 +18,10 @@ class MahasiswaController extends Controller
     {
         $data = $request->validate([
             'nama' => 'required',
-            'nim' => 'required',
+            'nim' => 'required|unique:mahasiswas,nim',
             'email' => 'required|email',
+        ], [
+            'nim.unique' => 'NIM tersebut sudah terdaftar. Silakan gunakan NIM lain.',
         ]);
 
         Mahasiswa::create($data);
@@ -35,8 +38,13 @@ class MahasiswaController extends Controller
     {
         $data = $request->validate([
             'nama' => 'required',
-            'nim' => 'required',
+            'nim' => [
+                'required',
+                Rule::unique('mahasiswas', 'nim')->ignore($mahasiswa->id),
+            ],
             'email' => 'required|email',
+        ], [
+            'nim.unique' => 'NIM tersebut sudah terdaftar. Silakan gunakan NIM lain.',
         ]);
 
         $mahasiswa->update($data);

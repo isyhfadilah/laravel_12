@@ -9,3 +9,42 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+@keyframes delete-modal-in {
+    from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes delete-backdrop-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.delete-modal {
+    margin: auto;
+}
+
+.delete-modal[open] {
+    animation: delete-modal-in 180ms ease-out both;
+}
+
+.delete-modal[open]::backdrop {
+    animation: delete-backdrop-in 180ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .delete-modal[open],
+    .delete-modal[open]::backdrop {
+        animation: none;
+    }
+}

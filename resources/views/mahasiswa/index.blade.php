@@ -51,7 +51,20 @@
                                     <td class="whitespace-nowrap px-4 py-4 text-slate-600">{{ $mhs->nim }}</td>
                                     <td class="px-4 py-4 text-slate-600">{{ $mhs->email }}</td>
                                     <td class="whitespace-nowrap px-4 py-4">
-                                        <a href="/mahasiswa/{{ $mhs->id }}/edit" class="inline-flex items-center rounded-lg border border-blue-200 px-3 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100">Edit</a>
+                                        <div class="flex items-center gap-2">
+                                            <a href="/mahasiswa/{{ $mhs->id }}/edit" class="inline-flex items-center rounded-lg border border-blue-200 px-3 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100">Edit</a>
+                                            <form action="/mahasiswa/{{ $mhs->id }}" method="POST" class="delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button
+                                                    type="submit"
+                                                    data-mahasiswa-name="{{ $mhs->nama }}"
+                                                    data-mahasiswa-nim="{{ $mhs->nim }}"
+                                                    data-mahasiswa-email="{{ $mhs->email }}"
+                                                    class="inline-flex items-center rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100"
+                                                >Hapus</button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
@@ -67,4 +80,75 @@
                 </div>
             </div>
         </section>
+
+        <dialog id="delete-modal" aria-labelledby="delete-modal-title" class="delete-modal w-[calc(100%-2rem)] max-w-md rounded-xl border border-slate-200 bg-white p-0 shadow-2xl backdrop:bg-slate-950/50">
+            <div class="p-6 sm:p-7">
+                <div class="flex items-start gap-4">
+                    <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-600" aria-hidden="true">
+                        <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M10.3 3.7 2.6 17a2 2 0 0 0 1.7 3h15.4a2 2 0 0 0 1.7-3L13.7 3.7a2 2 0 0 0-3.4 0Z" />
+                            <path d="M12 9v4M12 17h.01" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 id="delete-modal-title" class="text-lg font-semibold text-slate-950">Hapus data mahasiswa?</h2>
+                        <p class="mt-1 text-sm leading-6 text-slate-600">Data berikut akan dihapus secara permanen.</p>
+                    </div>
+                </div>
+
+                <div class="mt-5 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3.5">
+                    <p id="delete-mahasiswa-name" class="font-semibold text-slate-900"></p>
+                    <div class="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-xs text-slate-500">
+                        <span>NIM <span id="delete-mahasiswa-nim" class="font-medium text-slate-700"></span></span>
+                        <span class="text-slate-300" aria-hidden="true">|</span>
+                        <span id="delete-mahasiswa-email"></span>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+                    <button type="button" id="cancel-delete" class="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100">Batal</button>
+                    <button type="button" id="confirm-delete" class="inline-flex items-center justify-center rounded-lg bg-red-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-red-700 focus:outline-none focus:ring-4 focus:ring-red-200">Ya, hapus</button>
+                </div>
+            </div>
+        </dialog>
+
+        <script>
+            const deleteModal = document.getElementById('delete-modal');
+            const deleteName = document.getElementById('delete-mahasiswa-name');
+            const deleteNim = document.getElementById('delete-mahasiswa-nim');
+            const deleteEmail = document.getElementById('delete-mahasiswa-email');
+            const cancelDelete = document.getElementById('cancel-delete');
+            const confirmDelete = document.getElementById('confirm-delete');
+            let pendingDeleteForm = null;
+
+            document.querySelectorAll('.delete-form').forEach((form) => {
+                form.addEventListener('submit', (event) => {
+                    event.preventDefault();
+                    pendingDeleteForm = form;
+                    const deleteButton = form.querySelector('button');
+                    deleteName.textContent = deleteButton.dataset.mahasiswaName;
+                    deleteNim.textContent = deleteButton.dataset.mahasiswaNim;
+                    deleteEmail.textContent = deleteButton.dataset.mahasiswaEmail;
+                    deleteModal.showModal();
+                });
+            });
+
+            cancelDelete.addEventListener('click', () => {
+                deleteModal.close();
+                pendingDeleteForm = null;
+            });
+
+            confirmDelete.addEventListener('click', () => {
+                if (pendingDeleteForm) {
+                    pendingDeleteForm.submit();
+                }
+            });
+
+            deleteModal.addEventListener('click', (event) => {
+                if (event.target === deleteModal) {
+                    deleteModal.close();
+                    pendingDeleteForm = null;
+                }
+            });
+        </script>
 @endsection

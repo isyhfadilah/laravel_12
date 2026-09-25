@@ -52,4 +52,12 @@ class MahasiswaController extends Controller
         return redirect('/mahasiswa')
             ->with('success', 'Data berhasil diperbarui!');
     }
+
+    public function destroy(Mahasiswa $mahasiswa)
+    {
+        $mahasiswa->delete();
+
+        return redirect('/mahasiswa')
+            ->with('success', 'Data berhasil dihapus!');
+    }
 }

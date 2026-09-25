@@ -25,4 +25,23 @@ class MahasiswaController extends Controller
         
         return redirect('/mahasiswa')->with('success', 'Data berhasil disimpan!');
     }
+
+    public function edit(Mahasiswa $mahasiswa)
+    {
+        return view('mahasiswa.edit', compact('mahasiswa'));
+    }
+    
+    public function update(Request $request, Mahasiswa $mahasiswa)
+    {
+        $data = $request->validate([
+            'nama' => 'required',
+            'nim' => 'required',
+            'email' => 'required|email',
+        ]);
+
+        $mahasiswa->update($data);
+        
+        return redirect('/mahasiswa')
+            ->with('success', 'Data berhasil diperbarui!');
+    }
 }

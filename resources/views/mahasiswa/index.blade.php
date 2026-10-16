@@ -30,10 +30,31 @@
                 <div class="flex items-center justify-between border-b border-slate-200 px-6 py-5 sm:px-7">
                     <div>
                         <h2 class="text-lg font-semibold text-slate-950">Daftar mahasiswa</h2>
-                        <p class="mt-1 text-sm text-slate-500">{{ $mahasiswa->count() }} data terdaftar</p>
+                        <p class="mt-1 text-sm text-slate-500">
+                            {{ $mahasiswa->count() }} {{ $search !== '' ? 'hasil pencarian' : 'data terdaftar' }}
+                        </p>
                     </div>
-                    <span class="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">Aktif</span>
                 </div>
+                <form action="/mahasiswa" method="GET" role="search" class="flex flex-col gap-3 border-b border-slate-200 px-6 py-4 sm:flex-row sm:items-center sm:px-7">
+                    <div class="relative min-w-0 flex-1">
+                        <label for="search-mahasiswa" class="sr-only">Cari nama, NIM, atau email mahasiswa</label>
+                        <i class="fa-solid fa-magnifying-glass pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true"></i>
+                        <input
+                            id="search-mahasiswa"
+                            type="search"
+                            name="search"
+                            value="{{ $search }}"
+                            placeholder="Cari nama, NIM, atau email"
+                            class="w-full appearance-none rounded-lg border border-slate-300 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100"
+                        >
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button type="submit" class="inline-flex flex-1 items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 sm:flex-none">Cari</button>
+                        @if($search !== '')
+                            <a href="/mahasiswa" class="inline-flex flex-1 items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100 sm:flex-none">Reset</a>
+                        @endif
+                    </div>
+                </form>
                 <div class="overflow-x-auto">
                     <table class="w-full min-w-[560px] text-left text-sm">
                         <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-500">
@@ -70,8 +91,8 @@
                             @empty
                                 <tr>
                                         <td colspan="4" class="px-6 py-12 text-center sm:px-7">
-                                        <p class="font-medium text-slate-700">Belum ada data mahasiswa</p>
-                                        <p class="mt-1 text-sm text-slate-500">Data yang ditambahkan akan muncul di sini.</p>
+                                        <p class="font-medium text-slate-700">{{ $search !== '' ? 'Mahasiswa tidak ditemukan' : 'Belum ada data mahasiswa' }}</p>
+                                        <p class="mt-1 text-sm text-slate-500">{{ $search !== '' ? 'Coba kata kunci lain atau reset pencarian.' : 'Data yang ditambahkan akan muncul di sini.' }}</p>
                                     </td>
                                 </tr>
                             @endforelse

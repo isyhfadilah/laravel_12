@@ -25,13 +25,16 @@ class MahasiswaController extends Controller
             })
             ->get();
 
-        return view('mahasiswa.index', compact('mahasiswa', 'search'));
+        $editId = old('edit_mahasiswa_id', $request->query('edit'));
+        $editMahasiswa = $editId ? Mahasiswa::find($editId) : null;
+
+        return view('mahasiswa.index', compact('mahasiswa', 'search', 'editMahasiswa'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'nama' => 'required|string|max:10',
+            'nama' => 'required|string|max:100',
             'nim' => 'required|string|max:20|unique:mahasiswas,nim',
             'email' => 'required|email',
         ], [
@@ -45,7 +48,7 @@ class MahasiswaController extends Controller
 
     public function edit(Mahasiswa $mahasiswa)
     {
-        return view('mahasiswa.edit', compact('mahasiswa'));
+        return redirect('/mahasiswa?edit=' . $mahasiswa->id);
     }
     
     public function update(Request $request, Mahasiswa $mahasiswa)

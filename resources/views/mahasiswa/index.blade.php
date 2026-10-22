@@ -15,7 +15,9 @@
 
         <section class="grid gap-7 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start">
             <x-panel title="Tambah mahasiswa" description="Lengkapi informasi berikut untuk menyimpan data baru.">
-                <x-validation-errors />
+                @unless($editMahasiswa)
+                    <x-validation-errors />
+                @endunless
 
                 <form action="/mahasiswa" method="POST" class="space-y-5">
                     @csrf
@@ -73,7 +75,14 @@
                                     <td class="px-4 py-4 text-slate-600">{{ $mhs->email }}</td>
                                     <td class="whitespace-nowrap px-4 py-4">
                                         <div class="flex items-center gap-2">
-                                            <a href="/mahasiswa/{{ $mhs->id }}/edit" class="inline-flex items-center rounded-lg border border-blue-200 px-3 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100">Edit</a>
+                                            <button
+                                                type="button"
+                                                class="edit-mahasiswa-button inline-flex items-center rounded-lg border border-blue-200 px-3 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100"
+                                                data-mahasiswa-id="{{ $mhs->id }}"
+                                                data-mahasiswa-name="{{ $mhs->nama }}"
+                                                data-mahasiswa-nim="{{ $mhs->nim }}"
+                                                data-mahasiswa-email="{{ $mhs->email }}"
+                                            >Edit</button>
                                             <form action="/mahasiswa/{{ $mhs->id }}" method="POST" class="delete-form">
                                                 @csrf
                                                 @method('DELETE')
@@ -133,7 +142,73 @@
             </div>
         </dialog>
 
+        <dialog
+            id="edit-modal"
+            aria-labelledby="edit-modal-title"
+            data-open-on-load="{{ $editMahasiswa ? 'true' : 'false' }}"
+            class="edit-modal m-auto w-[calc(100%-2rem)] max-w-xl max-h-[calc(100%-2rem)] overflow-y-auto rounded-xl border border-slate-200 bg-white p-0 shadow-2xl backdrop:bg-slate-950/50"
+        >
+            <div class="p-6 sm:p-7">
+                <div class="mb-6 flex items-start justify-between gap-4">
+                    <div>
+                        <h2 id="edit-modal-title" class="text-lg font-semibold text-slate-950">Edit mahasiswa</h2>
+                        <p class="mt-1 text-sm text-slate-500">Perbarui informasi mahasiswa dengan data terbaru.</p>
+                    </div>
+                    <button type="button" id="cancel-edit" aria-label="Tutup" class="rounded-lg px-2 py-1 text-2xl leading-none text-slate-500 transition hover:bg-slate-100 hover:text-slate-700">&times;</button>
+                </div>
+
+                <x-validation-errors />
+
+                <form id="edit-mahasiswa-form" action="{{ $editMahasiswa ? '/mahasiswa/' . $editMahasiswa->id : '/mahasiswa' }}" method="POST" class="space-y-5">
+                    @csrf
+                    @method('PUT')
+                    <input id="edit-mahasiswa-id" type="hidden" name="edit_mahasiswa_id" value="{{ $editMahasiswa?->id }}">
+                    <x-form-input id="edit-nama" name="nama" label="Nama lengkap" :value="old('nama', $editMahasiswa?->nama)" required />
+                    <x-form-input id="edit-nim" name="nim" label="NIM" :value="old('nim', $editMahasiswa?->nim)" required />
+                    <x-form-input id="edit-email" name="email" label="Email" type="email" :value="old('email', $editMahasiswa?->email)" required />
+
+                    <div class="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
+                        <button type="button" id="cancel-edit-form" class="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100">Batal</button>
+                        <button type="submit" class="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 active:bg-blue-800">Simpan perubahan</button>
+                    </div>
+                </form>
+            </div>
+        </dialog>
+
         <script>
+            const editModal = document.getElementById('edit-modal');
+            const editForm = document.getElementById('edit-mahasiswa-form');
+            const editId = document.getElementById('edit-mahasiswa-id');
+            const editNama = document.getElementById('edit-nama');
+            const editNim = document.getElementById('edit-nim');
+            const editEmail = document.getElementById('edit-email');
+            const closeEditModal = () => editModal.close();
+
+            document.querySelectorAll('.edit-mahasiswa-button').forEach((button) => {
+                button.addEventListener('click', () => {
+                    const id = button.dataset.mahasiswaId;
+                    editForm.action = `/mahasiswa/${id}`;
+                    editId.value = id;
+                    editNama.value = button.dataset.mahasiswaName;
+                    editNim.value = button.dataset.mahasiswaNim;
+                    editEmail.value = button.dataset.mahasiswaEmail;
+                    editModal.showModal();
+                    editNama.focus();
+                });
+            });
+
+            document.getElementById('cancel-edit').addEventListener('click', closeEditModal);
+            document.getElementById('cancel-edit-form').addEventListener('click', closeEditModal);
+            editModal.addEventListener('click', (event) => {
+                if (event.target === editModal) {
+                    closeEditModal();
+                }
+            });
+
+            if (editModal.dataset.openOnLoad === 'true') {
+                editModal.showModal();
+            }
+
             const deleteModal = document.getElementById('delete-modal');
             const deleteName = document.getElementById('delete-mahasiswa-name');
             const deleteNim = document.getElementById('delete-mahasiswa-nim');

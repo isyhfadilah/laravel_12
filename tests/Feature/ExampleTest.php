@@ -17,10 +17,7 @@ class ExampleTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertOk()
-            ->assertSee('Data mahasiswa, terkelola dalam satu tempat.')
-            ->assertSee('Buka data mahasiswa')
-            ->assertSee('href="/mahasiswa"', false);
+        $response->assertRedirect('/login');
     }
 
     public function test_mahasiswa_can_be_searched_by_name_nim_or_email(): void
@@ -36,11 +33,11 @@ class ExampleTest extends TestCase
             'email' => 'budi@kampus.ac.id',
         ]);
 
-        $this->get('/mahasiswa?search=20240001')
+        $this->actingAs($aisyah)->get('/mahasiswa?search=20240001')
             ->assertOk()
             ->assertViewHas('mahasiswa', fn ($mahasiswa) => $mahasiswa->modelKeys() === [$aisyah->id]);
 
-        $this->get('/mahasiswa?search=budi@kampus.ac.id')
+        $this->actingAs($aisyah)->get('/mahasiswa?search=budi@kampus.ac.id')
             ->assertOk()
             ->assertViewHas('mahasiswa', fn ($mahasiswa) => $mahasiswa->modelKeys() === [$budi->id]);
     }
@@ -53,10 +50,10 @@ class ExampleTest extends TestCase
             'email' => 'aisyah@kampus.ac.id',
         ]);
 
-        $this->get("/mahasiswa/{$mahasiswa->id}/edit")
+        $this->actingAs($mahasiswa)->get("/mahasiswa/{$mahasiswa->id}/edit")
             ->assertRedirect("/mahasiswa?edit={$mahasiswa->id}");
 
-        $this->get("/mahasiswa?edit={$mahasiswa->id}")
+        $this->actingAs($mahasiswa)->get("/mahasiswa?edit={$mahasiswa->id}")
             ->assertOk()
             ->assertSee('data-open-on-load="true"', false)
             ->assertSee('value="Aisyah Putri"', false);
@@ -70,7 +67,7 @@ class ExampleTest extends TestCase
             'email' => 'aisyah@kampus.ac.id',
         ]);
 
-        $this->put("/mahasiswa/{$mahasiswa->id}", [
+        $this->actingAs($mahasiswa)->put("/mahasiswa/{$mahasiswa->id}", [
             'edit_mahasiswa_id' => $mahasiswa->id,
             'nama' => 'Aisyah Fadilah',
             'nim' => '20240001',
@@ -92,7 +89,7 @@ class ExampleTest extends TestCase
             'email' => 'aisyah@kampus.ac.id',
         ]);
 
-        $this->from('/mahasiswa')->put("/mahasiswa/{$mahasiswa->id}", [
+        $this->actingAs($mahasiswa)->from('/mahasiswa')->put("/mahasiswa/{$mahasiswa->id}", [
             'edit_mahasiswa_id' => $mahasiswa->id,
             'nama' => 'Aisyah Fadilah',
             'nim' => '20240001',
@@ -100,7 +97,7 @@ class ExampleTest extends TestCase
         ])->assertRedirect('/mahasiswa')
             ->assertSessionHasErrors('email');
 
-        $this->get('/mahasiswa')
+        $this->actingAs($mahasiswa)->get('/mahasiswa')
             ->assertOk()
             ->assertSee('data-open-on-load="true"', false)
             ->assertSee('value="Aisyah Fadilah"', false)

@@ -1,22 +1,20 @@
-<header class="border-b border-slate-800 bg-slate-950 text-white">
-    <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
-        <a href="/" class="flex items-center gap-3 text-sm font-semibold tracking-wide" aria-label="Manajemen Data Mahasiswa, beranda">
-            <span class="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-lg font-bold shadow-lg shadow-blue-950/40">M</span>
-            <span>Data Mahasiswa</span>
+<header class="site-header">
+    <nav class="site-nav" aria-label="Navigasi utama">
+        <a href="/" class="brand" aria-label="Data Mahasiswa, beranda">
+            <span class="brand-mark" aria-hidden="true">M<span>.</span></span>
+            <span>DATA<br><span class="brand-subtitle">MAHASISWA</span></span>
         </a>
-        @auth
-        <div class="flex items-center gap-3">
-        <a href="/mahasiswa" class="inline-flex items-center gap-2 rounded-lg border border-slate-700 px-3 py-2 text-xs font-semibold text-slate-100 transition hover:border-slate-500 hover:bg-slate-800 sm:text-sm">
-            <span>Kelola data</span>
-            <i class="fa-solid fa-arrow-right text-xs" aria-hidden="true"></i>
-        </a>
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="rounded-lg border border-slate-700 px-3 py-2 text-sm font-semibold hover:bg-slate-800">Keluar</button>
-            </form>
+        <div class="nav-actions">
+            @auth
+                <a href="/mahasiswa" class="nav-link">Kelola data <span aria-hidden="true">↗</span></a>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="neo-button nav-logout">Keluar</button>
+                </form>
+            @else
+                <a href="{{ route('login') }}" class="nav-link" @if(request()->routeIs('login')) aria-current="page" @endif>Masuk</a>
+                <a href="{{ route('register') }}" class="neo-button" @if(request()->routeIs('register')) aria-current="page" @endif>Daftar <span aria-hidden="true">↗</span></a>
+            @endauth
         </div>
-        @else
-            <a href="{{ route('login') }}" class="text-sm font-semibold text-slate-100 hover:underline">Masuk</a>
-        @endauth
-    </div>
+    </nav>
 </header>

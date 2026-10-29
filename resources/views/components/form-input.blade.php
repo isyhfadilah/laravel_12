@@ -6,8 +6,12 @@
         id="{{ $id }}"
         type="{{ $type }}"
         name="{{ $name }}"
+        @error($name) aria-invalid="true" aria-describedby="{{ $id }}-error" @enderror
         value="{{ $value }}"
         @if($placeholder) placeholder="{{ $placeholder }}" @endif
         {{ $attributes->merge(['class' => 'block w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-600 focus:ring-4 focus:ring-blue-100']) }}
     >
+    @error($name)
+        <p id="{{ $id }}-error" class="field-error">{{ $message }}</p>
+    @enderror
 </div>

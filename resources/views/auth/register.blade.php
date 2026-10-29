@@ -1,7 +1,9 @@
-@extends('layouts.app', ['title' => 'Daftar akun', 'containerClass' => 'mx-auto max-w-lg px-5 py-10 sm:px-8'])
+@extends('layouts.app', ['title' => 'Daftar akun', 'containerClass' => 'mx-auto max-w-6xl px-5 py-10 sm:px-8 lg:py-14'])
 
 @section('content')
-    <x-panel title="Daftar akun" description="Lengkapi data berikut untuk membuat akun mahasiswa.">
+    <div class="auth-shell">
+        <x-auth-intro :register="true" />
+    <x-panel class="auth-panel" title="Daftar akun" description="Lengkapi data berikut untuk membuat akun mahasiswa.">
         <x-validation-errors />
         <form action="{{ route('register') }}" method="POST" class="space-y-5">
             @csrf
@@ -14,4 +16,5 @@
         </form>
         <p class="mt-6 text-center text-sm text-slate-600">Sudah punya akun? <a href="{{ route('login') }}" class="font-semibold text-blue-700 underline">Masuk</a></p>
     </x-panel>
+    </div>
 @endsection

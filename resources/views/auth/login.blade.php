@@ -1,7 +1,12 @@
-@extends('layouts.app', ['title' => 'Masuk', 'containerClass' => 'mx-auto max-w-lg px-5 py-10 sm:px-8'])
+@extends('layouts.app', ['title' => 'Masuk', 'containerClass' => 'mx-auto max-w-6xl px-5 py-10 sm:px-8 lg:py-14'])
 
 @section('content')
-    <x-panel title="Masuk" description="Gunakan NIM dan kata sandi untuk membuka data mahasiswa.">
+    <div class="auth-shell">
+        <x-auth-intro />
+    <x-panel class="auth-panel" title="Masuk" description="Gunakan NIM dan kata sandi untuk membuka data mahasiswa.">
+        @if(session('success'))
+            <div class="neo-notice" role="status">{{ session('success') }}</div>
+        @endif
         <x-validation-errors />
         <form action="{{ route('login') }}" method="POST" class="space-y-5">
             @csrf
@@ -11,4 +16,5 @@
         </form>
         <p class="mt-6 text-center text-sm text-slate-600">Belum punya akun? <a href="{{ route('register') }}" class="font-semibold text-blue-700 underline">Daftar sekarang</a></p>
     </x-panel>
+    </div>
 @endsection

@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+namespace App\Http\Controllers;
 use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -22,6 +24,19 @@ class AuthController extends Controller
             'email' => ['required', 'email', 'max:255', 'unique:mahasiswas,email'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
+
+        // $mahasiswa = Mahasiswa::where('nim', $data['nim'])->where('email', $data['email'])->first();
+
+        // if(!$mahasiswa || $mahasiswa->password !== null) {
+        //     return back()->withErrors([
+        //         'nim' => 'NIM atau email tidak valid, atau akun sudah terdaftar.'
+        //     ])->onlyInput('nim', 'email');
+        // }
+
+        // $mahasiswa->password = Hash::make($data['password']);
+        // $mahasiswa->save();
+        // return redirect('/login')
+        //     ->with('success', 'Registrasi berhasil. Silakan login.');
 
         $mahasiswa = Mahasiswa::create($data);
         Auth::login($mahasiswa);

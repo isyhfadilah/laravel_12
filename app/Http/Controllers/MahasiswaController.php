@@ -15,7 +15,7 @@ class MahasiswaController extends Controller
         ]);
         $search = trim($validated['search'] ?? '');
 
-        $mahasiswa = Mahasiswa::query()
+        $mahasiswa = Mahasiswa::with('prestasi')
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('nama', 'like', "%{$search}%")
@@ -23,6 +23,7 @@ class MahasiswaController extends Controller
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
+            ->orderBy('nama')
             ->get();
 
         $editId = old('edit_mahasiswa_id', $request->query('edit'));

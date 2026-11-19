@@ -64,6 +64,7 @@
                                 <th class="px-6 py-3.5 font-semibold sm:px-7">Mahasiswa</th>
                                 <th class="px-4 py-3.5 font-semibold">NIM</th>
                                 <th class="px-4 py-3.5 font-semibold">Email</th>
+                                <th class="px-4 py-3.5 font-semibold">Jumlah Prestasi</th>
                                 <th class="px-4 py-3.5 font-semibold">Aksi</th>
                             </tr>
                         </thead>
@@ -73,6 +74,7 @@
                                     <td class="px-6 py-4 font-medium text-slate-900 sm:px-7">{{ $mhs->nama }}</td>
                                     <td class="whitespace-nowrap px-4 py-4 text-slate-600">{{ $mhs->nim }}</td>
                                     <td class="px-4 py-4 text-slate-600">{{ $mhs->email }}</td>
+                                    <td class="px-4 py-4 text-slate-600">{{ $mhs->prestasi->count() }}</td>
                                     <td class="whitespace-nowrap px-4 py-4">
                                         <div class="flex items-center gap-2">
                                             <button
@@ -99,7 +101,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                        <td colspan="4" class="px-6 py-12 text-center sm:px-7">
+                                        <td colspan="5" class="px-6 py-12 text-center sm:px-7">
                                         <p class="font-medium text-slate-700">{{ $search !== '' ? 'Mahasiswa tidak ditemukan' : 'Belum ada data mahasiswa' }}</p>
                                         <p class="mt-1 text-sm text-slate-500">{{ $search !== '' ? 'Coba kata kunci lain atau reset pencarian.' : 'Data yang ditambahkan akan muncul di sini.' }}</p>
                                     </td>

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Mahasiswa extends Authenticatable
 {
@@ -15,5 +16,10 @@ class Mahasiswa extends Authenticatable
     protected function casts(): array
     {
         return ['password' => 'hashed'];
+    }
+
+    public function prestasi(): HasMany
+    {
+        return $this->hasMany(Prestasi::class);
     }
 }

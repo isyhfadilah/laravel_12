@@ -3,18 +3,21 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Prestasi extends Model
 {
     protected $table = 'prestasis';
     protected $fillable = [
-        'mahasiswa_id',
-        'judul',
+        'nama_prestasi',
+        'tingkat',
+        'tahun',
+        'deskripsi',
     ];
 
-    public function mahasiswa(): BelongsTo
+    public function mahasiswa(): BelongsToMany
     {
-        return $this->belongsTo(Mahasiswa::class);
+        return $this->belongsToMany(Mahasiswa::class, 'mahasiswa_prestasi')
+            ->withTimestamps();
     }
 }

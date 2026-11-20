@@ -6,7 +6,8 @@
         </a>
         <div class="nav-actions">
             @auth
-                <a href="/mahasiswa" class="nav-link">Kelola data <span aria-hidden="true">↗</span></a>
+                <a href="/mahasiswa" class="nav-link" @if(request()->is('mahasiswa*')) aria-current="page" @endif>Daftar Mahasiswa</a>
+                <a href="{{ route('prestasi.index') }}" class="nav-link" @if(request()->is('prestasi*')) aria-current="page" @endif>Daftar Prestasi</a>
                 <form action="{{ route('logout') }}" method="POST">
                     @csrf
                     <button type="submit" class="neo-button nav-logout">Keluar</button>

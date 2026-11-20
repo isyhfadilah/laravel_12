@@ -58,7 +58,7 @@ class AuthController extends Controller
         ]);
 
         if (! Auth::attempt($credentials)) {
-            throw ValidationException::withMeWssages([
+            throw ValidationException::withMessages([
                 'nim' => 'NIM atau kata sandi salah.',
             ]);
         }

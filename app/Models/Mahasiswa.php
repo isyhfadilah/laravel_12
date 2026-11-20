@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Mahasiswa extends Authenticatable
 {
@@ -18,8 +18,9 @@ class Mahasiswa extends Authenticatable
         return ['password' => 'hashed'];
     }
 
-    public function prestasi(): HasMany
+    public function prestasi(): BelongsToMany
     {
-        return $this->hasMany(Prestasi::class);
+        return $this->belongsToMany(Prestasi::class, 'mahasiswa_prestasi')
+            ->withTimestamps();
     }
 }

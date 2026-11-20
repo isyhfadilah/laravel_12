@@ -121,10 +121,21 @@
 .neo-app th { padding-top: 16px; padding-bottom: 16px; font-weight: 850; border-bottom: 2px solid var(--ink); }
 .neo-app td { border-bottom: 1px solid #19191925; }
 .neo-app tbody tr:hover { background: #faf5d5; }
-.neo-app .edit-mahasiswa-button, .neo-app .delete-form button, .neo-app #cancel-delete, .neo-app #cancel-edit-form, .neo-app a.border-slate-300 {
+.neo-app :is(a, button).record-action-button {
+    display: inline-flex; align-items: center; justify-content: center;
+    min-height: 44px; border: 2px solid var(--ink); border-radius: 0;
+    padding: 8px 12px; color: var(--ink); font-size: 14px; font-weight: 750;
+    text-decoration: none; white-space: nowrap; box-shadow: 2px 2px 0 var(--ink); cursor: pointer;
+    transition: transform 120ms, box-shadow 120ms;
+}
+.neo-app .record-action-edit { background: var(--purple); }
+.neo-app .record-action-delete { background: #f7a59b; }
+.neo-app :is(a, button).record-action-button:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+.neo-app :is(a, button).record-action-button:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.neo-app #cancel-delete, .neo-app #cancel-edit-form, .neo-app a.border-slate-300 {
     border: 2px solid var(--ink); border-radius: 0; min-height: 44px; color: var(--ink); background: var(--purple); font-weight: 750; box-shadow: 2px 2px 0 var(--ink);
 }
-.neo-app .delete-form button, .neo-app #confirm-delete { background: #f7a59b; color: var(--ink); }
+.neo-app #confirm-delete { background: #f7a59b; color: var(--ink); }
 .neo-app #cancel-delete, .neo-app #cancel-edit-form, .neo-app a.border-slate-300 { background: #fff; }
 .neo-app [role="alert"], .neo-app [role="status"] { border: 2px solid var(--ink); border-radius: 0; box-shadow: 3px 3px 0 var(--ink); color: var(--ink); }
 .neo-app [role="alert"] { background: #ffe1dc; }

@@ -12,8 +12,10 @@ class MahasiswaController extends Controller
     {
         $validated = $request->validate([
             'search' => ['nullable', 'string', 'max:100'],
+            'prestasi' => ['nullable', 'string', 'max:150'],
         ]);
         $search = trim($validated['search'] ?? '');
+        $prestasiFilter = trim($validated['prestasi'] ?? '');
 
         $mahasiswa = Mahasiswa::with('prestasi')
             ->when($search !== '', function ($query) use ($search) {
@@ -23,13 +25,20 @@ class MahasiswaController extends Controller
                         ->orWhere('email', 'like', "%{$search}%");
                 });
             })
+            ->when($prestasiFilter !== '', function ($query) use ($prestasiFilter) {
+                $query->whereHas('prestasi', function ($query) use ($prestasiFilter) {
+                    $query->where('nama_prestasi', 'like', "%{$prestasiFilter}%");
+                });
+            })
             ->orderBy('nama')
-            ->get();
+            ->paginate(5)
+            ->withQueryString();
+        $daftarPrestasi = \App\Models\Prestasi::orderBy('nama_prestasi')->get();
 
         $editId = old('edit_mahasiswa_id', $request->query('edit'));
         $editMahasiswa = $editId ? Mahasiswa::find($editId) : null;
 
-        return view('mahasiswa.index', compact('mahasiswa', 'search', 'editMahasiswa'));
+        return view('mahasiswa.index', compact('mahasiswa', 'search', 'prestasiFilter', 'daftarPrestasi', 'editMahasiswa'));
     }
 
     public function store(Request $request)

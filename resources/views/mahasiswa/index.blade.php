@@ -33,7 +33,7 @@
                     <div>
                         <h2 class="text-lg font-semibold text-slate-950">Daftar mahasiswa</h2>
                         <p class="mt-1 text-sm text-slate-500">
-                            {{ $mahasiswa->count() }} {{ $search !== '' ? 'hasil pencarian' : 'data terdaftar' }}
+                            {{ $mahasiswa->total() }} {{ ($search !== '' || $prestasiFilter !== '') ? 'hasil pencarian' : 'data terdaftar' }}
                         </p>
                     </div>
                 </div>
@@ -50,9 +50,26 @@
                             class="w-full appearance-none rounded-lg border border-slate-300 bg-white py-2.5 pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100"
                         >
                     </div>
+                    <div class="min-w-0 sm:w-64">
+                        <label for="filter-prestasi" class="sr-only">Filter berdasarkan prestasi</label>
+                        <input
+                            id="filter-prestasi"
+                            type="search"
+                            name="prestasi"
+                            list="daftar-nama-prestasi"
+                            value="{{ $prestasiFilter }}"
+                            placeholder="Cari berdasarkan prestasi"
+                            class="w-full appearance-none rounded-lg border border-slate-300 bg-white py-2.5 px-3 text-sm text-slate-900 placeholder:text-slate-400 focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100"
+                        >
+                        <datalist id="daftar-nama-prestasi">
+                            @foreach($daftarPrestasi as $itemPrestasi)
+                                <option value="{{ $itemPrestasi->nama_prestasi }}"></option>
+                            @endforeach
+                        </datalist>
+                    </div>
                     <div class="flex items-center gap-2">
                         <button type="submit" class="inline-flex flex-1 items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 sm:flex-none">Cari</button>
-                        @if($search !== '')
+                        @if($search !== '' || $prestasiFilter !== '')
                             <a href="/mahasiswa" class="inline-flex flex-1 items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100 sm:flex-none">Reset</a>
                         @endif
                     </div>
@@ -71,15 +88,21 @@
                         <tbody class="divide-y divide-slate-100">
                             @forelse($mahasiswa as $mhs)
                                 <tr class="transition hover:bg-blue-50/50">
-                                    <td class="px-6 py-4 font-medium text-slate-900 sm:px-7">{{ $mhs->nama }}</td>
+                                    <td class="px-6 py-4 font-medium text-slate-900 sm :px-7">{{ $mhs->nama }}</td>
                                     <td class="whitespace-nowrap px-4 py-4 text-slate-600">{{ $mhs->nim }}</td>
                                     <td class="px-4 py-4 text-slate-600">{{ $mhs->email }}</td>
-                                    <td class="px-4 py-4 text-slate-600">{{ $mhs->prestasi->count() }}</td>
+                                    <td class="px-4 py-4 text-slate-600">
+                                        @if($mhs->prestasi->isEmpty())
+                                            <span class="text-slate-400">Belum ada</span>
+                                        @else
+                                            {{ $mhs->prestasi->pluck('nama_prestasi')->join(', ') }}
+                                        @endif
+                                    </td>
                                     <td class="whitespace-nowrap px-4 py-4">
                                         <div class="flex items-center gap-2">
                                             <button
                                                 type="button"
-                                                class="edit-mahasiswa-button inline-flex items-center rounded-lg border border-blue-200 px-3 py-2 text-sm font-semibold text-blue-700 transition hover:bg-blue-50 focus:outline-none focus:ring-4 focus:ring-blue-100"
+                                                class="edit-mahasiswa-button record-action-button record-action-edit"
                                                 data-mahasiswa-id="{{ $mhs->id }}"
                                                 data-mahasiswa-name="{{ $mhs->nama }}"
                                                 data-mahasiswa-nim="{{ $mhs->nim }}"
@@ -93,7 +116,7 @@
                                                     data-mahasiswa-name="{{ $mhs->nama }}"
                                                     data-mahasiswa-nim="{{ $mhs->nim }}"
                                                     data-mahasiswa-email="{{ $mhs->email }}"
-                                                    class="inline-flex items-center rounded-lg border border-red-200 px-3 py-2 text-sm font-semibold text-red-700 transition hover:bg-red-50 focus:outline-none focus:ring-4 focus:ring-red-100"
+                                                    class="record-action-button record-action-delete"
                                                 >Hapus</button>
                                             </form>
                                         </div>
@@ -102,14 +125,19 @@
                             @empty
                                 <tr>
                                         <td colspan="5" class="px-6 py-12 text-center sm:px-7">
-                                        <p class="font-medium text-slate-700">{{ $search !== '' ? 'Mahasiswa tidak ditemukan' : 'Belum ada data mahasiswa' }}</p>
-                                        <p class="mt-1 text-sm text-slate-500">{{ $search !== '' ? 'Coba kata kunci lain atau reset pencarian.' : 'Data yang ditambahkan akan muncul di sini.' }}</p>
+                                        <p class="font-medium text-slate-700">{{ ($search !== '' || $prestasiFilter !== '') ? 'Mahasiswa tidak ditemukan' : 'Belum ada data mahasiswa' }}</p>
+                                        <p class="mt-1 text-sm text-slate-500">{{ ($search !== '' || $prestasiFilter !== '') ? 'Coba kata kunci lain atau reset pencarian.' : 'Data yang ditambahkan akan muncul di sini.' }}</p>
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
+                @if($mahasiswa->hasPages())
+                    <div class="border-t border-slate-200 px-6 py-4 sm:px-7">
+                        {{ $mahasiswa->links() }}
+                    </div>
+                @endif
             </div>
         </section>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Mahasiswa;
 
 class MahasiswaController extends Controller
@@ -47,11 +48,15 @@ class MahasiswaController extends Controller
             'nama' => 'required|string|max:100',
             'nim' => 'required|string|max:20|unique:mahasiswas,nim',
             'email' => 'required|email',
-            'bio' => 'nullable|string',
-            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'bio' => 'nullable|string|max:10000',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'nim.unique' => 'NIM tersebut sudah terdaftar. Silakan gunakan NIM lain.',
         ]);
+
+        if ($request->hasFile('foto')) {
+            $data['foto'] = $request->file('foto')->store('mahasiswa', 'public');
+        }
 
         Mahasiswa::create($data);
         
@@ -72,9 +77,20 @@ class MahasiswaController extends Controller
                 Rule::unique('mahasiswas', 'nim')->ignore($mahasiswa->id),
             ],
             'email' => 'required|email',
+            'bio' => 'nullable|string|max:10000',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
         ], [
             'nim.unique' => 'NIM tersebut sudah terdaftar. Silakan gunakan NIM lain.',
         ]);
+
+        if ($request->hasFile('foto')) {
+            if ($mahasiswa->foto) {
+                Storage::disk('public')->delete($mahasiswa->foto);
+            }
+            $data['foto'] = $request->file('foto')->store('mahasiswa', 'public');
+        } else {
+            unset($data['foto']);
+        }
 
         $mahasiswa->update($data);
         
@@ -84,6 +100,9 @@ class MahasiswaController extends Controller
 
     public function destroy(Mahasiswa $mahasiswa)
     {
+        if ($mahasiswa->foto) {
+            Storage::disk('public')->delete($mahasiswa->foto);
+        }
         $mahasiswa->delete();
 
         return redirect('/mahasiswa')

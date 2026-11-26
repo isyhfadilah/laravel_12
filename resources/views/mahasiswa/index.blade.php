@@ -223,8 +223,8 @@
                         <label for="edit-foto" class="mb-2 block">Foto profil <span class="font-normal text-slate-500">(opsional)</span></label>
                         <label for="edit-foto" class="photo-picker">
                             <span class="photo-avatar-wrap">
-                                <svg id="edit-foto-placeholder" class="photo-placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="4"/></svg>
-                                <img id="edit-foto-preview" class="photo-avatar-image hidden" alt="Pratinjau foto profil">
+                                <svg id="edit-foto-placeholder" class="photo-placeholder-icon {{ $editMahasiswa?->foto ? 'hidden' : '' }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="4"/></svg>
+                                <img id="edit-foto-preview" src="{{ $editMahasiswa?->foto ? asset('storage/' . $editMahasiswa->foto) : '' }}" class="photo-avatar-image {{ $editMahasiswa?->foto ? '' : 'hidden' }}" alt="Foto profil saat ini">
                             </span>
                             <span class="photo-picker-copy"><strong>Pilih foto baru</strong><span>Kosongkan jika foto tidak ingin diubah · Maksimal 2 MB</span></span>
                             <input id="edit-foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="photo-file-input">

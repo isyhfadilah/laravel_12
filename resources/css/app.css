@@ -143,6 +143,27 @@
 .neo-notice { padding: 14px; margin-bottom: 20px; font-size: 14px; }
 .neo-app dialog::backdrop { background: #19191999; backdrop-filter: blur(3px); }
 .neo-app #cancel-edit { min-width: 44px; min-height: 44px; border: 2px solid var(--ink); border-radius: 0; color: var(--ink); }
+.achievement-summary { display: flex; align-items: flex-start; gap: 12px; margin-top: 12px; max-width: 360px; }
+.achievement-thumb { width: 82px; height: 64px; flex: 0 0 auto; object-fit: cover; border: 2px solid var(--ink); box-shadow: 3px 3px 0 var(--purple); }
+.achievement-description { max-width: 240px; font-size: 12px; line-height: 1.55; color: #515151; }
+.achievement-level, .achievement-year { display: inline-flex; align-items: center; min-height: 30px; padding: 5px 9px; border: 1.5px solid var(--ink); font-size: 11px; font-weight: 800; white-space: nowrap; }
+.achievement-level { background: var(--purple); }
+.achievement-year { background: #fff; }
+.photo-upload-box { position: relative; display: flex; min-height: 126px; flex-direction: column; align-items: center; justify-content: center; gap: 5px; overflow: hidden; border: 2px dashed var(--ink); background: #fffdf5; text-align: center; cursor: pointer; transition: background 120ms, box-shadow 120ms; }
+.photo-upload-box:hover, .photo-upload-box:focus-within { background: #f2edff; box-shadow: 3px 3px 0 var(--purple); }
+.photo-upload-icon { display: grid; width: 30px; height: 30px; place-items: center; border: 2px solid var(--ink); background: var(--yellow); font-size: 20px; line-height: 1; }
+.photo-upload-title { font-size: 13px; font-weight: 850; }
+.photo-upload-help { font-size: 11px; font-weight: 500; color: #515151; }
+.photo-file-input { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0 !important; opacity: 0; cursor: pointer; }
+.photo-preview:not(.hidden), .photo-current { display: block; width: min(100%, 320px); max-height: 190px; margin-top: 12px; border: 2px solid var(--ink); object-fit: cover; box-shadow: 4px 4px 0 var(--purple); }
+.neo-app .note-editor.note-frame { border: 2px solid var(--ink); border-radius: 0; box-shadow: 3px 3px 0 #c6b5f588; }
+.neo-app .note-toolbar { border-bottom: 2px solid var(--ink); background: #f7f2df; }
+.neo-app .note-btn { min-height: 32px; border: 1px solid #19191955; border-radius: 0; background: #fffdf5; color: var(--ink); }
+.neo-app .note-btn:hover, .neo-app .note-btn.active { background: var(--yellow); }
+.neo-app .note-editable { min-height: 140px; padding: 12px 14px; background: #fff; font-size: 14px; line-height: 1.65; }
+.neo-app .note-statusbar { border-top: 1px solid #19191935; background: #fffdf5; }
+.neo-app .note-modal .modal-content { border: 2px solid var(--ink); border-radius: 0; box-shadow: 6px 6px 0 var(--ink); }
+.neo-app .note-modal .modal-header { border-bottom: 2px solid var(--ink); background: #f7f2df; }
 @media (max-width: 767px) {
     .site-nav { padding: 16px 20px; gap: 12px; flex-wrap: wrap; }
     .nav-actions { gap: 14px; }

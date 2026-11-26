@@ -156,12 +156,14 @@
 .photo-upload-help { font-size: 11px; font-weight: 500; color: #515151; }
 .photo-file-input { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0 !important; opacity: 0; cursor: pointer; }
 .photo-preview:not(.hidden), .photo-current:not(.hidden) { display: block; width: min(100%, 320px); max-height: 190px; margin-top: 12px; border: 2px solid var(--ink); object-fit: cover; box-shadow: 4px 4px 0 var(--purple); }
-.neo-app .note-editor.note-frame { border: 2px solid var(--ink); border-radius: 0; box-shadow: 3px 3px 0 #c6b5f588; }
-.neo-app .note-toolbar { border-bottom: 2px solid var(--ink); background: #f7f2df; }
-.neo-app .note-btn { min-height: 32px; border: 1px solid #19191955; border-radius: 0; background: #fffdf5; color: var(--ink); }
-.neo-app .note-btn:hover, .neo-app .note-btn.active { background: var(--yellow); }
-.neo-app .note-editable { min-height: 140px; padding: 12px 14px; background: #fff; font-size: 14px; line-height: 1.65; }
-.neo-app .note-statusbar { border-top: 1px solid #19191935; background: #fffdf5; }
+.neo-app .note-editor.note-frame { overflow: hidden; border: 2px solid var(--ink); border-radius: 0; background: var(--paper); box-shadow: none; transition: border-color 120ms, box-shadow 120ms; }
+.neo-app .note-editor.note-frame:focus-within { border-color: #6b35c5; box-shadow: 3px 3px 0 var(--purple); }
+.neo-app .note-toolbar { border-bottom: 2px solid var(--ink); background: var(--paper); padding: 7px 8px; }
+.neo-app .note-btn { min-height: 34px; border: 2px solid var(--ink); border-radius: 0; background: #fff; color: var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+.neo-app .note-btn:hover, .neo-app .note-btn.active, .neo-app .note-btn:focus { background: var(--yellow); color: var(--ink); }
+.neo-app .note-editable { min-height: 140px; padding: 12px 14px; background: var(--paper); color: var(--ink); font-family: inherit; font-size: 16px; line-height: 1.55; }
+.neo-app .note-placeholder { padding: 12px 14px; color: #737373; font-size: 16px; }
+.neo-app .note-statusbar { border-top: 1px solid #19191935; background: var(--paper); }
 .neo-app .note-modal .modal-content { border: 2px solid var(--ink); border-radius: 0; box-shadow: 6px 6px 0 var(--ink); }
 .neo-app .note-modal .modal-header { border-bottom: 2px solid var(--ink); background: #f7f2df; }
 .student-identity { display: flex; align-items: center; gap: 12px; min-width: 190px; }

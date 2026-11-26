@@ -19,7 +19,7 @@
                 <x-validation-errors />
             @endunless
 
-            <form action="{{ route('prestasi.store') }}" method="POST" class="space-y-5">
+            <form action="{{ route('prestasi.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
                 @csrf
                 <x-form-input id="nama_prestasi" name="nama_prestasi" label="Nama prestasi" :value="old('nama_prestasi')" placeholder="Contoh: Juara 1 Hackathon 2026" required />
 
@@ -36,7 +36,13 @@
 
                 <div>
                     <label for="deskripsi" class="mb-2 block">Deskripsi</label>
-                    <textarea id="deskripsi" name="deskripsi" rows="4" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">{{ old('deskripsi') }}</textarea>
+                    <textarea id="deskripsi" name="deskripsi" rows="4" class="summernote w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">{{ old('deskripsi') }}</textarea>
+                </div>
+
+                <div>
+                    <label for="foto" class="mb-2 block">Foto prestasi</label>
+                    <input id="foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm">
+                    <p class="mt-1 text-xs text-slate-500">JPG, PNG, atau WebP; maksimal 2 MB.</p>
                 </div>
 
                 <fieldset>
@@ -90,8 +96,11 @@
                             <tr class="transition hover:bg-blue-50/50">
                                 <td class="px-6 py-4 sm:px-7">
                                     <p class="font-semibold text-slate-900">{{ $item->nama_prestasi }}</p>
+                                    @if($item->foto)
+                                        <img src="{{ asset('storage/' . $item->foto) }}" alt="Foto {{ $item->nama_prestasi }}" class="mt-2 h-16 w-24 rounded object-cover">
+                                    @endif
                                     @if($item->deskripsi)
-                                        <p class="mt-1 max-w-xs text-xs text-slate-500">{{ $item->deskripsi }}</p>
+                                        <p class="mt-1 max-w-xs text-xs text-slate-500">{{ \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 120) }}</p>
                                     @endif
                                 </td>
                                 <td class="px-4 py-4 text-slate-600">{{ $item->tingkat }}</td>
@@ -150,7 +159,7 @@
                 <button type="button" id="close-edit-prestasi" aria-label="Tutup" class="min-h-10 min-w-10 border-2 border-slate-700">&times;</button>
             </div>
             <x-validation-errors />
-            <form action="{{ $editPrestasi ? route('prestasi.update', $editPrestasi) : route('prestasi.store') }}" method="POST" class="space-y-5">
+            <form action="{{ $editPrestasi ? route('prestasi.update', $editPrestasi) : route('prestasi.store') }}" method="POST" enctype="multipart/form-data" class="space-y-5">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="edit_prestasi_id" value="{{ $editPrestasi?->id }}">
@@ -166,7 +175,15 @@
                 <x-form-input id="edit-tahun" name="tahun" label="Tahun" type="number" :value="old('tahun', $editPrestasi?->tahun)" min="1900" :max="date('Y') + 1" required />
                 <div>
                     <label for="edit-deskripsi" class="mb-2 block">Deskripsi</label>
-                    <textarea id="edit-deskripsi" name="deskripsi" rows="4" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm">{{ old('deskripsi', $editPrestasi?->deskripsi) }}</textarea>
+                    <textarea id="edit-deskripsi" name="deskripsi" rows="4" class="summernote w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm">{{ old('deskripsi', $editPrestasi?->deskripsi) }}</textarea>
+                </div>
+                <div>
+                    <label for="edit-foto" class="mb-2 block">Foto prestasi</label>
+                    @if($editPrestasi?->foto)
+                        <img src="{{ asset('storage/' . $editPrestasi->foto) }}" alt="Foto {{ $editPrestasi->nama_prestasi }} saat ini" class="mb-3 h-24 w-36 rounded object-cover">
+                    @endif
+                    <input id="edit-foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm">
+                    <p class="mt-1 text-xs text-slate-500">Pilih foto baru untuk mengganti foto saat ini. JPG, PNG, atau WebP; maksimal 2 MB.</p>
                 </div>
                 <fieldset>
                     <legend class="mb-2 font-semibold text-slate-800">Mahasiswa penerima</legend>
@@ -220,5 +237,19 @@
         if (editPrestasiModal.dataset.openOnLoad === 'true') {
             editPrestasiModal.showModal();
         }
+
+        $(function () {
+            $('.summernote').summernote({
+                height: 180,
+                placeholder: 'Tulis deskripsi prestasi...',
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'italic', 'underline', 'clear']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['insert', ['link']],
+                    ['view', ['codeview']]
+                ]
+            });
+        });
     </script>
 @endsection

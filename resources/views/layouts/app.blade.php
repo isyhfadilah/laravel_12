@@ -14,6 +14,7 @@
     <x-container id="main-content" :class="$containerClass ?? 'mx-auto max-w-6xl px-5 py-10 sm:px-8 lg:py-14'">
         @yield('content')
     </x-container>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote.min.js"></script>
 </body>
 </html>

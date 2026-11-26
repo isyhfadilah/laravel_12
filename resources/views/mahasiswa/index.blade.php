@@ -23,14 +23,21 @@
                     @csrf
                     <div>
                         <label for="foto" class="mb-2 block">Foto profil <span class="font-normal text-slate-500">(opsional)</span></label>
-                        <label for="foto" class="photo-picker">
-                            <span class="photo-avatar-wrap">
+                        <div class="profile-photo-control">
+                            <label for="foto" class="profile-photo-avatar" aria-label="Pilih foto profil">
+                                <span class="photo-avatar-wrap">
                                 <svg id="foto-placeholder" class="photo-placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="4"/></svg>
                                 <img id="foto-preview" class="photo-avatar-image hidden" alt="Pratinjau foto profil">
-                            </span>
-                            <span class="photo-picker-copy"><strong>Pilih foto profil</strong><span>JPG, PNG, atau WebP &middot; Maksimal 2 MB</span></span>
-                            <input id="foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="photo-file-input">
-                        </label>
+                                </span>
+                                <span class="profile-photo-camera" aria-hidden="true"><i class="fa-solid fa-camera"></i></span>
+                            </label>
+                            <div class="profile-photo-copy">
+                                <strong>Foto profil</strong>
+                                <span>JPG, PNG, atau WebP. Maksimal 2 MB.</span>
+                                <div class="profile-photo-actions"><label for="foto" class="profile-photo-button">Pilih foto</label><span id="foto-filename" class="profile-photo-filename">Belum ada foto dipilih</span></div>
+                            </div>
+                            <input id="foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="profile-photo-input">
+                        </div>
                     </div>
                     <x-form-input id="nama" name="nama" label="Nama lengkap" :value="old('nama')" placeholder="Contoh: Aisyah Putri" required />
                     <x-form-input id="nim" name="nim" label="NIM" :value="old('nim')" placeholder="Contoh: 20240001" required />
@@ -221,14 +228,21 @@
                     <input id="edit-mahasiswa-id" type="hidden" name="edit_mahasiswa_id" value="{{ $editMahasiswa?->id }}">
                     <div>
                         <label for="edit-foto" class="mb-2 block">Foto profil <span class="font-normal text-slate-500">(opsional)</span></label>
-                        <label for="edit-foto" class="photo-picker">
-                            <span class="photo-avatar-wrap">
+                        <div class="profile-photo-control">
+                            <label for="edit-foto" class="profile-photo-avatar" aria-label="Pilih foto profil baru">
+                                <span class="photo-avatar-wrap">
                                 <svg id="edit-foto-placeholder" class="photo-placeholder-icon {{ $editMahasiswa?->foto ? 'hidden' : '' }}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="4"/></svg>
                                 <img id="edit-foto-preview" src="{{ $editMahasiswa?->foto ? asset('storage/' . $editMahasiswa->foto) : '' }}" class="photo-avatar-image {{ $editMahasiswa?->foto ? '' : 'hidden' }}" alt="Foto profil saat ini">
-                            </span>
-                            <span class="photo-picker-copy"><strong>Pilih foto baru</strong><span>Kosongkan jika foto tidak ingin diubah &middot; Maksimal 2 MB</span></span>
-                            <input id="edit-foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="photo-file-input">
-                        </label>
+                                </span>
+                                <span class="profile-photo-camera" aria-hidden="true"><i class="fa-solid fa-camera"></i></span>
+                            </label>
+                            <div class="profile-photo-copy">
+                                <strong>Foto profil</strong>
+                                <span>Foto saat ini tetap digunakan jika tidak diganti. JPG, PNG, atau WebP, maksimal 2 MB.</span>
+                                <div class="profile-photo-actions"><label for="edit-foto" class="profile-photo-button">Ganti foto</label><span id="edit-foto-filename" class="profile-photo-filename">{{ $editMahasiswa?->foto ? 'Foto saat ini' : 'Belum ada foto dipilih' }}</span></div>
+                            </div>
+                            <input id="edit-foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="profile-photo-input">
+                        </div>
                     </div>
                     <x-form-input id="edit-nama" name="nama" label="Nama lengkap" :value="old('nama', $editMahasiswa?->nama)" required />
                     <x-form-input id="edit-nim" name="nim" label="NIM" :value="old('nim', $editMahasiswa?->nim)" required />
@@ -271,6 +285,7 @@
                     editFotoPreview.classList.toggle('hidden', !button.dataset.mahasiswaFoto);
                     editFotoPlaceholder.classList.toggle('hidden', Boolean(button.dataset.mahasiswaFoto));
                     document.getElementById('edit-foto').value = '';
+                    document.getElementById('edit-foto-filename').textContent = button.dataset.mahasiswaFoto ? 'Foto saat ini' : 'Belum ada foto dipilih';
                     editModal.showModal();
                     initializeSummernote('#edit-bio');
                     $('#edit-bio').summernote('code', button.dataset.mahasiswaBio || '');
@@ -310,16 +325,18 @@
                 });
             }
 
-            function initializePhotoPreview(inputId, previewId, placeholderId) {
+            function initializePhotoPreview(inputId, previewId, placeholderId, filenameId) {
                 const input = document.getElementById(inputId);
                 const preview = document.getElementById(previewId);
                 const placeholder = document.getElementById(placeholderId);
+                const filename = document.getElementById(filenameId);
                 input.addEventListener('change', () => {
                     const file = input.files[0];
                     if (!file) return;
                     preview.src = URL.createObjectURL(file);
                     preview.classList.remove('hidden');
                     placeholder.classList.add('hidden');
+                    filename.textContent = file.name;
                 });
             }
 

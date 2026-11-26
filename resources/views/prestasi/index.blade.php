@@ -42,9 +42,9 @@
                 <div>
                     <label for="foto" class="mb-2 block">Foto prestasi <span class="font-normal text-slate-500">(opsional)</span></label>
                     <label for="foto" class="photo-upload-box">
-                        <span class="photo-upload-icon" aria-hidden="true">↑</span>
+                        <span class="photo-upload-icon" aria-hidden="true">&#8593;</span>
                         <span class="photo-upload-title">Pilih foto untuk diunggah</span>
-                        <span class="photo-upload-help">JPG, PNG, atau WebP · Maksimal 2 MB</span>
+                        <span class="photo-upload-help">JPG, PNG, atau WebP &middot; Maksimal 2 MB</span>
                         <input id="foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="photo-file-input">
                     </label>
                     <img id="foto-preview" class="photo-preview hidden" alt="Pratinjau foto prestasi">
@@ -192,9 +192,9 @@
                         <img src="{{ asset('storage/' . $editPrestasi->foto) }}" alt="Foto {{ $editPrestasi->nama_prestasi }} saat ini" class="photo-current">
                     @endif
                     <label for="edit-foto" class="photo-upload-box">
-                        <span class="photo-upload-icon" aria-hidden="true">↑</span>
+                        <span class="photo-upload-icon" aria-hidden="true">&#8593;</span>
                         <span class="photo-upload-title">Pilih foto baru</span>
-                        <span class="photo-upload-help">JPG, PNG, atau WebP · Maksimal 2 MB</span>
+                        <span class="photo-upload-help">JPG, PNG, atau WebP &middot; Maksimal 2 MB</span>
                         <input id="edit-foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="photo-file-input">
                     </label>
                     <img id="edit-foto-preview" class="photo-preview hidden" alt="Pratinjau foto baru">
@@ -252,16 +252,16 @@
             $(selector).each(function () {
                 if ($(this).next('.note-editor').length) return;
                 $(this).summernote({
-                height: 180,
-                placeholder: 'Tulis deskripsi prestasi...',
-                dialogsInBody: true,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'italic', 'underline', 'clear']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['insert', ['link']],
-                    ['view', ['codeview']]
-                ]
+                    height: 180,
+                    placeholder: 'Tulis deskripsi prestasi...',
+                    dialogsInBody: true,
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'italic', 'underline', 'clear']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['insert', ['link']],
+                        ['view', ['codeview']]
+                    ]
                 });
             });
         }

@@ -21,22 +21,23 @@
 
                 <form action="/mahasiswa" method="POST" enctype="multipart/form-data" class="space-y-5">
                     @csrf
+                    <div>
+                        <label for="foto" class="mb-2 block">Foto profil <span class="font-normal text-slate-500">(opsional)</span></label>
+                        <label for="foto" class="photo-picker">
+                            <span class="photo-avatar-wrap">
+                                <svg id="foto-placeholder" class="photo-placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="4"/></svg>
+                                <img id="foto-preview" class="photo-avatar-image hidden" alt="Pratinjau foto profil">
+                            </span>
+                            <span class="photo-picker-copy"><strong>Pilih foto profil</strong><span>JPG, PNG, atau WebP · Maksimal 2 MB</span></span>
+                            <input id="foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="photo-file-input">
+                        </label>
+                    </div>
                     <x-form-input id="nama" name="nama" label="Nama lengkap" :value="old('nama')" placeholder="Contoh: Aisyah Putri" required />
                     <x-form-input id="nim" name="nim" label="NIM" :value="old('nim')" placeholder="Contoh: 20240001" required />
                     <x-form-input id="email" name="email" label="Email" type="email" :value="old('email')" placeholder="nama@kampus.ac.id" required />
                     <div>
                         <label for="bio" class="mb-2 block">Bio <span class="font-normal text-slate-500">(opsional)</span></label>
                         <textarea id="bio" name="bio" class="summernote">{{ old('bio') }}</textarea>
-                    </div>
-                    <div>
-                        <label for="foto" class="mb-2 block">Foto profil <span class="font-normal text-slate-500">(opsional)</span></label>
-                        <label for="foto" class="photo-upload-box">
-                            <span class="photo-upload-icon" aria-hidden="true">&#8593;</span>
-                            <span class="photo-upload-title">Pilih foto profil</span>
-                            <span class="photo-upload-help">JPG, PNG, atau WebP &middot; Maksimal 2 MB</span>
-                            <input id="foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="photo-file-input">
-                        </label>
-                        <img id="foto-preview" class="photo-preview hidden" alt="Pratinjau foto profil">
                     </div>
                     <button type="submit" class="inline-flex w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 active:bg-blue-800">Simpan data</button>
                 </form>
@@ -218,23 +219,23 @@
                     @csrf
                     @method('PUT')
                     <input id="edit-mahasiswa-id" type="hidden" name="edit_mahasiswa_id" value="{{ $editMahasiswa?->id }}">
+                    <div>
+                        <label for="edit-foto" class="mb-2 block">Foto profil <span class="font-normal text-slate-500">(opsional)</span></label>
+                        <label for="edit-foto" class="photo-picker">
+                            <span class="photo-avatar-wrap">
+                                <svg id="edit-foto-placeholder" class="photo-placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="4"/></svg>
+                                <img id="edit-foto-preview" class="photo-avatar-image hidden" alt="Pratinjau foto profil">
+                            </span>
+                            <span class="photo-picker-copy"><strong>Pilih foto baru</strong><span>Kosongkan jika foto tidak ingin diubah · Maksimal 2 MB</span></span>
+                            <input id="edit-foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="photo-file-input">
+                        </label>
+                    </div>
                     <x-form-input id="edit-nama" name="nama" label="Nama lengkap" :value="old('nama', $editMahasiswa?->nama)" required />
                     <x-form-input id="edit-nim" name="nim" label="NIM" :value="old('nim', $editMahasiswa?->nim)" required />
                     <x-form-input id="edit-email" name="email" label="Email" type="email" :value="old('email', $editMahasiswa?->email)" required />
                     <div>
                         <label for="edit-bio" class="mb-2 block">Bio <span class="font-normal text-slate-500">(opsional)</span></label>
                         <textarea id="edit-bio" name="bio" class="summernote">{{ old('bio', $editMahasiswa?->bio) }}</textarea>
-                    </div>
-                    <div>
-                        <label for="edit-foto" class="mb-2 block">Foto profil <span class="font-normal text-slate-500">(opsional)</span></label>
-                        <img id="edit-foto-current" class="photo-current hidden" alt="Foto profil saat ini">
-                        <label for="edit-foto" class="photo-upload-box">
-                            <span class="photo-upload-icon" aria-hidden="true">&#8593;</span>
-                            <span class="photo-upload-title">Pilih foto baru</span>
-                            <span class="photo-upload-help">JPG, PNG, atau WebP &middot; Maksimal 2 MB</span>
-                            <input id="edit-foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="photo-file-input">
-                        </label>
-                        <img id="edit-foto-preview" class="photo-preview hidden" alt="Pratinjau foto profil baru">
                     </div>
 
                     <div class="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
@@ -253,7 +254,8 @@
             const editNim = document.getElementById('edit-nim');
             const editEmail = document.getElementById('edit-email');
             const editBio = document.getElementById('edit-bio');
-            const editFotoCurrent = document.getElementById('edit-foto-current');
+            const editFotoPreview = document.getElementById('edit-foto-preview');
+            const editFotoPlaceholder = document.getElementById('edit-foto-placeholder');
             const closeEditModal = () => editModal.close();
 
             document.querySelectorAll('.edit-mahasiswa-button').forEach((button) => {
@@ -265,13 +267,10 @@
                     editNim.value = button.dataset.mahasiswaNim;
                     editEmail.value = button.dataset.mahasiswaEmail;
                     editBio.value = button.dataset.mahasiswaBio || '';
-                    if (editFotoCurrent) {
-                        editFotoCurrent.src = button.dataset.mahasiswaFoto || '';
-                        editFotoCurrent.classList.toggle('hidden', !button.dataset.mahasiswaFoto);
-                    }
+                    editFotoPreview.src = button.dataset.mahasiswaFoto || '';
+                    editFotoPreview.classList.toggle('hidden', !button.dataset.mahasiswaFoto);
+                    editFotoPlaceholder.classList.toggle('hidden', Boolean(button.dataset.mahasiswaFoto));
                     document.getElementById('edit-foto').value = '';
-                    document.getElementById('edit-foto-preview').removeAttribute('src');
-                    document.getElementById('edit-foto-preview').classList.add('hidden');
                     editModal.showModal();
                     initializeSummernote('#edit-bio');
                     $('#edit-bio').summernote('code', button.dataset.mahasiswaBio || '');
@@ -292,8 +291,8 @@
                 initializeSummernote('#edit-bio');
             }
             initializeSummernote('#bio');
-            initializePhotoPreview('foto', 'foto-preview');
-            initializePhotoPreview('edit-foto', 'edit-foto-preview');
+            initializePhotoPreview('foto', 'foto-preview', 'foto-placeholder');
+            initializePhotoPreview('edit-foto', 'edit-foto-preview', 'edit-foto-placeholder');
 
             function initializeSummernote(selector) {
                 $(selector).each(function () {
@@ -311,18 +310,16 @@
                 });
             }
 
-            function initializePhotoPreview(inputId, previewId) {
+            function initializePhotoPreview(inputId, previewId, placeholderId) {
                 const input = document.getElementById(inputId);
                 const preview = document.getElementById(previewId);
+                const placeholder = document.getElementById(placeholderId);
                 input.addEventListener('change', () => {
                     const file = input.files[0];
-                    if (!file) {
-                        preview.removeAttribute('src');
-                        preview.classList.add('hidden');
-                        return;
-                    }
+                    if (!file) return;
                     preview.src = URL.createObjectURL(file);
                     preview.classList.remove('hidden');
+                    placeholder.classList.add('hidden');
                 });
             }
 

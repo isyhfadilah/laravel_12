@@ -13,6 +13,7 @@ class Prestasi extends Model
         'tingkat',
         'tahun',
         'deskripsi',
+        'foto',
     ];
 
     public function mahasiswa(): BelongsToMany

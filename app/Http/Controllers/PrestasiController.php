@@ -6,6 +6,7 @@ use App\Models\Mahasiswa;
 use App\Models\Prestasi;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Storage;
 
 class PrestasiController extends Controller
 {
@@ -41,12 +42,17 @@ class PrestasiController extends Controller
             'tingkat' => ['required', Rule::in(['Kampus', 'Kota', 'Provinsi', 'Nasional', 'Internasional'])],
             'tahun' => ['required', 'integer', 'between:1900,' . ((int) date('Y') + 1)],
             'deskripsi' => ['nullable', 'string', 'max:2000'],
+            'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'mahasiswa_ids' => ['required', 'array', 'min:1'],
             'mahasiswa_ids.*' => ['integer', 'exists:mahasiswas,id'],
         ], [
             'mahasiswa_ids.required' => 'Pilih minimal satu mahasiswa.',
             'mahasiswa_ids.min' => 'Pilih minimal satu mahasiswa.',
         ]);
+
+        if ($request->hasFile('foto')) {
+            $data['foto'] = $request->file('foto')->store('prestasi', 'public');
+        }
 
         $prestasi = Prestasi::create($data);
         $prestasi->mahasiswa()->sync($data['mahasiswa_ids']);
@@ -66,6 +72,7 @@ class PrestasiController extends Controller
             'tingkat' => ['required', Rule::in(['Kampus', 'Kota', 'Provinsi', 'Nasional', 'Internasional'])],
             'tahun' => ['required', 'integer', 'between:1900,' . ((int) date('Y') + 1)],
             'deskripsi' => ['nullable', 'string', 'max:2000'],
+            'foto' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'mahasiswa_ids' => ['required', 'array', 'min:1'],
             'mahasiswa_ids.*' => ['integer', 'exists:mahasiswas,id'],
             'edit_prestasi_id' => ['nullable', 'integer'],
@@ -73,6 +80,15 @@ class PrestasiController extends Controller
             'mahasiswa_ids.required' => 'Pilih minimal satu mahasiswa.',
             'mahasiswa_ids.min' => 'Pilih minimal satu mahasiswa.',
         ]);
+
+        if ($request->hasFile('foto')) {
+            if ($prestasi->foto) {
+                Storage::disk('public')->delete($prestasi->foto);
+            }
+            $data['foto'] = $request->file('foto')->store('prestasi', 'public');
+        } else {
+            unset($data['foto']);
+        }
 
         $prestasi->update($data);
         $prestasi->mahasiswa()->sync($data['mahasiswa_ids']);
@@ -82,6 +98,9 @@ class PrestasiController extends Controller
 
     public function destroy(Prestasi $prestasi)
     {
+        if ($prestasi->foto) {
+            Storage::disk('public')->delete($prestasi->foto);
+        }
         $prestasi->delete();
 
         return redirect()->route('prestasi.index')->with('success', 'Prestasi berhasil dihapus.');

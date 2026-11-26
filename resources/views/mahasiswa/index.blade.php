@@ -19,7 +19,7 @@
                     <x-validation-errors />
                 @endunless
 
-                <form action="/mahasiswa" method="POST" class="space-y-5">
+                <form action="/mahasiswa" method="POST" enctype="multipart/form-data" class="space-y-5">
                     @csrf
                     <x-form-input id="nama" name="nama" label="Nama lengkap" :value="old('nama')" placeholder="Contoh: Aisyah Putri" required />
                     <x-form-input id="nim" name="nim" label="NIM" :value="old('nim')" placeholder="Contoh: 20240001" required />
@@ -189,7 +189,7 @@
 
                 <x-validation-errors />
 
-                <form id="edit-mahasiswa-form" action="{{ $editMahasiswa ? '/mahasiswa/' . $editMahasiswa->id : '/mahasiswa' }}" method="POST" class="space-y-5">
+                <form id="edit-mahasiswa-form" action="{{ $editMahasiswa ? '/mahasiswa/' . $editMahasiswa->id : '/mahasiswa' }}" method="POST" enctype="multipart/form-data" class="space-y-5">
                     @csrf
                     @method('PUT')
                     <input id="edit-mahasiswa-id" type="hidden" name="edit_mahasiswa_id" value="{{ $editMahasiswa?->id }}">

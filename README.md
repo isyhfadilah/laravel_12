@@ -10,12 +10,14 @@
 ## Membuat commit
 
 Jalankan `bun commit` dari root project. Perintah ini tetap berjalan sebagai
-watcher, menggabungkan simpanan file yang berdekatan, lalu men-stage dan membuat
-commit Conventional Commit otomatis. Perubahan yang sudah ada saat watcher mulai
-juga akan di-commit. Tekan `Ctrl+C` untuk berhenti. Folder dependency, cache,
-hasil build, dan file `.env` tidak dipantau. Push tetap manual.
+watcher, menggabungkan simpanan file yang berdekatan, membaca staged diff dengan
+Codex CLI, lalu men-stage dan membuat commit Conventional Commit otomatis.
+Perubahan yang sudah ada saat watcher mulai juga akan di-commit. Codex CLI harus
+terpasang dan sudah terautentikasi; jika gagal membuat ringkasan, perubahan tetap
+staged dan watcher mencoba lagi. Tekan `Ctrl+C` untuk berhenti. Folder dependency,
+cache, hasil build, dan file `.env` tidak dipantau. Push tetap manual.
 
-Contoh: `feat(mahasiswa): tambahkan pencarian berdasarkan nama`
+Example: `feat(mahasiswa): add search by student name`
 
 ## About Laravel
 

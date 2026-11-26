@@ -21,9 +21,24 @@
 
                 <form action="/mahasiswa" method="POST" enctype="multipart/form-data" class="space-y-5">
                     @csrf
+                    <x-validation-errors />
                     <x-form-input id="nama" name="nama" label="Nama lengkap" :value="old('nama')" placeholder="Contoh: Aisyah Putri" required />
                     <x-form-input id="nim" name="nim" label="NIM" :value="old('nim')" placeholder="Contoh: 20240001" required />
                     <x-form-input id="email" name="email" label="Email" type="email" :value="old('email')" placeholder="nama@kampus.ac.id" required />
+                    <div>
+                        <label for="bio" class="mb-2 block">Bio <span class="font-normal text-slate-500">(opsional)</span></label>
+                        <textarea id="bio" name="bio" class="summernote">{{ old('bio') }}</textarea>
+                    </div>
+                    <div>
+                        <label for="foto" class="mb-2 block">Foto profil <span class="font-normal text-slate-500">(opsional)</span></label>
+                        <label for="foto" class="photo-upload-box">
+                            <span class="photo-upload-icon" aria-hidden="true">&#8593;</span>
+                            <span class="photo-upload-title">Pilih foto profil</span>
+                            <span class="photo-upload-help">JPG, PNG, atau WebP &middot; Maksimal 2 MB</span>
+                            <input id="foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="photo-file-input">
+                        </label>
+                        <img id="foto-preview" class="photo-preview hidden" alt="Pratinjau foto profil">
+                    </div>
                     <button type="submit" class="inline-flex w-full items-center justify-center rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-200 active:bg-blue-800">Simpan data</button>
                 </form>
             </x-panel>
@@ -88,7 +103,16 @@
                         <tbody class="divide-y divide-slate-100">
                             @forelse($mahasiswa as $mhs)
                                 <tr class="transition hover:bg-blue-50/50">
-                                    <td class="px-6 py-4 font-medium text-slate-900 sm :px-7">{{ $mhs->nama }}</td>
+                                    <td class="px-6 py-4 font-medium text-slate-900 sm:px-7">
+                                        <div class="student-identity">
+                                            @if($mhs->foto)
+                                                <img src="{{ asset('storage/' . $mhs->foto) }}" alt="Foto {{ $mhs->nama }}" class="student-avatar">
+                                            @else
+                                                <span class="student-avatar student-avatar-placeholder" aria-hidden="true">{{ \Illuminate\Support\Str::upper(\Illuminate\Support\Str::substr($mhs->nama, 0, 1)) }}</span>
+                                            @endif
+                                            <div><span class="student-name">{{ $mhs->nama }}</span>@if($mhs->bio)<span class="student-bio">{{ \Illuminate\Support\Str::limit(strip_tags($mhs->bio), 72) }}</span>@endif</div>
+                                        </div>
+                                    </td>
                                     <td class="whitespace-nowrap px-4 py-4 text-slate-600">{{ $mhs->nim }}</td>
                                     <td class="px-4 py-4 text-slate-600">{{ $mhs->email }}</td>
                                     <td class="px-4 py-4 text-slate-600">
@@ -107,6 +131,8 @@
                                                 data-mahasiswa-name="{{ $mhs->nama }}"
                                                 data-mahasiswa-nim="{{ $mhs->nim }}"
                                                 data-mahasiswa-email="{{ $mhs->email }}"
+                                                data-mahasiswa-bio="{{ $mhs->bio }}"
+                                                data-mahasiswa-foto="{{ $mhs->foto ? asset('storage/' . $mhs->foto) : '' }}"
                                             >Edit</button>
                                             <form action="/mahasiswa/{{ $mhs->id }}" method="POST" class="delete-form">
                                                 @csrf
@@ -196,6 +222,21 @@
                     <x-form-input id="edit-nama" name="nama" label="Nama lengkap" :value="old('nama', $editMahasiswa?->nama)" required />
                     <x-form-input id="edit-nim" name="nim" label="NIM" :value="old('nim', $editMahasiswa?->nim)" required />
                     <x-form-input id="edit-email" name="email" label="Email" type="email" :value="old('email', $editMahasiswa?->email)" required />
+                    <div>
+                        <label for="edit-bio" class="mb-2 block">Bio <span class="font-normal text-slate-500">(opsional)</span></label>
+                        <textarea id="edit-bio" name="bio" class="summernote">{{ old('bio', $editMahasiswa?->bio) }}</textarea>
+                    </div>
+                    <div>
+                        <label for="edit-foto" class="mb-2 block">Foto profil <span class="font-normal text-slate-500">(opsional)</span></label>
+                        <img id="edit-foto-current" class="photo-current hidden" alt="Foto profil saat ini">
+                        <label for="edit-foto" class="photo-upload-box">
+                            <span class="photo-upload-icon" aria-hidden="true">&#8593;</span>
+                            <span class="photo-upload-title">Pilih foto baru</span>
+                            <span class="photo-upload-help">JPG, PNG, atau WebP &middot; Maksimal 2 MB</span>
+                            <input id="edit-foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="photo-file-input">
+                        </label>
+                        <img id="edit-foto-preview" class="photo-preview hidden" alt="Pratinjau foto profil baru">
+                    </div>
 
                     <div class="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
                         <button type="button" id="cancel-edit-form" class="inline-flex items-center justify-center rounded-lg border border-slate-300 px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-100">Batal</button>
@@ -212,6 +253,8 @@
             const editNama = document.getElementById('edit-nama');
             const editNim = document.getElementById('edit-nim');
             const editEmail = document.getElementById('edit-email');
+            const editBio = document.getElementById('edit-bio');
+            const editFotoCurrent = document.getElementById('edit-foto-current');
             const closeEditModal = () => editModal.close();
 
             document.querySelectorAll('.edit-mahasiswa-button').forEach((button) => {
@@ -222,7 +265,14 @@
                     editNama.value = button.dataset.mahasiswaName;
                     editNim.value = button.dataset.mahasiswaNim;
                     editEmail.value = button.dataset.mahasiswaEmail;
+                    editBio.value = button.dataset.mahasiswaBio || '';
+                    if (editFotoCurrent) {
+                        editFotoCurrent.src = button.dataset.mahasiswaFoto || '';
+                        editFotoCurrent.classList.toggle('hidden', !button.dataset.mahasiswaFoto);
+                    }
                     editModal.showModal();
+                    initializeSummernote('#edit-bio');
+                    $('#edit-bio').summernote('code', button.dataset.mahasiswaBio || '');
                     editNama.focus();
                 });
             });
@@ -237,6 +287,41 @@
 
             if (editModal.dataset.openOnLoad === 'true') {
                 editModal.showModal();
+                initializeSummernote('#edit-bio');
+            }
+            initializeSummernote('#bio');
+            initializePhotoPreview('foto', 'foto-preview');
+            initializePhotoPreview('edit-foto', 'edit-foto-preview');
+
+            function initializeSummernote(selector) {
+                $(selector).each(function () {
+                    if ($(this).next('.note-editor').length) return;
+                    $(this).summernote({
+                        height: 150,
+                        placeholder: 'Tulis beberapa kalimat tentang mahasiswa...',
+                        dialogsInBody: true,
+                        toolbar: [
+                            ['font', ['bold', 'italic', 'underline', 'clear']],
+                            ['para', ['ul', 'ol', 'paragraph']],
+                            ['view', ['codeview']]
+                        ]
+                    });
+                });
+            }
+
+            function initializePhotoPreview(inputId, previewId) {
+                const input = document.getElementById(inputId);
+                const preview = document.getElementById(previewId);
+                input.addEventListener('change', () => {
+                    const file = input.files[0];
+                    if (!file) {
+                        preview.removeAttribute('src');
+                        preview.classList.add('hidden');
+                        return;
+                    }
+                    preview.src = URL.createObjectURL(file);
+                    preview.classList.remove('hidden');
+                });
             }
 
             const deleteModal = document.getElementById('delete-modal');

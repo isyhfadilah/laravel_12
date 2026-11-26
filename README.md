@@ -7,6 +7,14 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Membuat commit
+
+Jalankan `bun commit` (atau `npm run commit`). Alur ini men-stage semua perubahan
+repo, menyusun pesan Conventional Commit dari file yang berubah, lalu membuat
+commit otomatis. Push tetap manual.
+
+Contoh: `feat(mahasiswa): tambahkan pencarian berdasarkan nama`
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:

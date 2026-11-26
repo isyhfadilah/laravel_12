@@ -3,6 +3,7 @@
     "private": true,
     "type": "module",
     "scripts": {
+        "commit": "node scripts/commit.js",
         "build": "vite build",
         "dev": "vite"
     },

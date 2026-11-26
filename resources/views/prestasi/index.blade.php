@@ -14,7 +14,7 @@
     @endif
 
     <section class="grid gap-7 lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:items-start">
-        <x-panel title="Tambah prestasi" description="Pilih satu atau beberapa mahasiswa penerima prestasi.">
+        <x-panel title="Tambah prestasi" description="Lengkapi detail pencapaian dan mahasiswa penerima.">
             @unless($editPrestasi)
                 <x-validation-errors />
             @endunless
@@ -35,14 +35,19 @@
                 <x-form-input id="tahun" name="tahun" label="Tahun" type="number" :value="old('tahun', date('Y'))" min="1900" :max="date('Y') + 1" required />
 
                 <div>
-                    <label for="deskripsi" class="mb-2 block">Deskripsi</label>
+                    <label for="deskripsi" class="mb-2 block">Deskripsi <span class="font-normal text-slate-500">(opsional)</span></label>
                     <textarea id="deskripsi" name="deskripsi" rows="4" class="summernote w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-4 focus:ring-blue-100">{{ old('deskripsi') }}</textarea>
                 </div>
 
                 <div>
-                    <label for="foto" class="mb-2 block">Foto prestasi</label>
-                    <input id="foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm">
-                    <p class="mt-1 text-xs text-slate-500">JPG, PNG, atau WebP; maksimal 2 MB.</p>
+                    <label for="foto" class="mb-2 block">Foto prestasi <span class="font-normal text-slate-500">(opsional)</span></label>
+                    <label for="foto" class="photo-upload-box">
+                        <span class="photo-upload-icon" aria-hidden="true">↑</span>
+                        <span class="photo-upload-title">Pilih foto untuk diunggah</span>
+                        <span class="photo-upload-help">JPG, PNG, atau WebP · Maksimal 2 MB</span>
+                        <input id="foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="photo-file-input">
+                    </label>
+                    <img id="foto-preview" class="photo-preview hidden" alt="Pratinjau foto prestasi">
                 </div>
 
                 <fieldset>
@@ -96,15 +101,19 @@
                             <tr class="transition hover:bg-blue-50/50">
                                 <td class="px-6 py-4 sm:px-7">
                                     <p class="font-semibold text-slate-900">{{ $item->nama_prestasi }}</p>
-                                    @if($item->foto)
-                                        <img src="{{ asset('storage/' . $item->foto) }}" alt="Foto {{ $item->nama_prestasi }}" class="mt-2 h-16 w-24 rounded object-cover">
-                                    @endif
-                                    @if($item->deskripsi)
-                                        <p class="mt-1 max-w-xs text-xs text-slate-500">{{ \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 120) }}</p>
+                                    @if($item->foto || $item->deskripsi)
+                                        <div class="achievement-summary">
+                                            @if($item->foto)
+                                                <img src="{{ asset('storage/' . $item->foto) }}" alt="Foto {{ $item->nama_prestasi }}" class="achievement-thumb">
+                                            @endif
+                                            @if($item->deskripsi)
+                                                <p class="achievement-description">{{ \Illuminate\Support\Str::limit(strip_tags($item->deskripsi), 120) }}</p>
+                                            @endif
+                                        </div>
                                     @endif
                                 </td>
-                                <td class="px-4 py-4 text-slate-600">{{ $item->tingkat }}</td>
-                                <td class="whitespace-nowrap px-4 py-4 text-slate-600">{{ $item->tahun }}</td>
+                                <td class="px-4 py-4"><span class="achievement-level">{{ $item->tingkat }}</span></td>
+                                <td class="whitespace-nowrap px-4 py-4"><span class="achievement-year">{{ $item->tahun }}</span></td>
                                 <td class="px-4 py-4 text-slate-600">
                                     {{ $item->mahasiswa->pluck('nama')->join(', ') ?: 'Belum dipilih' }}
                                 </td>
@@ -174,16 +183,21 @@
                 </div>
                 <x-form-input id="edit-tahun" name="tahun" label="Tahun" type="number" :value="old('tahun', $editPrestasi?->tahun)" min="1900" :max="date('Y') + 1" required />
                 <div>
-                    <label for="edit-deskripsi" class="mb-2 block">Deskripsi</label>
+                    <label for="edit-deskripsi" class="mb-2 block">Deskripsi <span class="font-normal text-slate-500">(opsional)</span></label>
                     <textarea id="edit-deskripsi" name="deskripsi" rows="4" class="summernote w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm">{{ old('deskripsi', $editPrestasi?->deskripsi) }}</textarea>
                 </div>
                 <div>
-                    <label for="edit-foto" class="mb-2 block">Foto prestasi</label>
+                    <label for="edit-foto" class="mb-2 block">Foto prestasi <span class="font-normal text-slate-500">(opsional)</span></label>
                     @if($editPrestasi?->foto)
-                        <img src="{{ asset('storage/' . $editPrestasi->foto) }}" alt="Foto {{ $editPrestasi->nama_prestasi }} saat ini" class="mb-3 h-24 w-36 rounded object-cover">
+                        <img src="{{ asset('storage/' . $editPrestasi->foto) }}" alt="Foto {{ $editPrestasi->nama_prestasi }} saat ini" class="photo-current">
                     @endif
-                    <input id="edit-foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm">
-                    <p class="mt-1 text-xs text-slate-500">Pilih foto baru untuk mengganti foto saat ini. JPG, PNG, atau WebP; maksimal 2 MB.</p>
+                    <label for="edit-foto" class="photo-upload-box">
+                        <span class="photo-upload-icon" aria-hidden="true">↑</span>
+                        <span class="photo-upload-title">Pilih foto baru</span>
+                        <span class="photo-upload-help">JPG, PNG, atau WebP · Maksimal 2 MB</span>
+                        <input id="edit-foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="photo-file-input">
+                    </label>
+                    <img id="edit-foto-preview" class="photo-preview hidden" alt="Pratinjau foto baru">
                 </div>
                 <fieldset>
                     <legend class="mb-2 font-semibold text-slate-800">Mahasiswa penerima</legend>
@@ -234,14 +248,13 @@
         editPrestasiModal.addEventListener('click', (event) => {
             if (event.target === editPrestasiModal) editPrestasiModal.close();
         });
-        if (editPrestasiModal.dataset.openOnLoad === 'true') {
-            editPrestasiModal.showModal();
-        }
-
-        $(function () {
-            $('.summernote').summernote({
+        function initializeSummernote() {
+            $('.summernote').each(function () {
+                if ($(this).next('.note-editor').length) return;
+                $(this).summernote({
                 height: 180,
                 placeholder: 'Tulis deskripsi prestasi...',
+                dialogsInBody: true,
                 toolbar: [
                     ['style', ['style']],
                     ['font', ['bold', 'italic', 'underline', 'clear']],
@@ -249,7 +262,33 @@
                     ['insert', ['link']],
                     ['view', ['codeview']]
                 ]
+                ]
+                });
             });
-        });
+        }
+
+        function showEditPrestasiModal() {
+            editPrestasiModal.showModal();
+            initializeSummernote();
+        }
+        if (editPrestasiModal.dataset.openOnLoad === 'true') showEditPrestasiModal();
+        else initializeSummernote();
+
+        function previewPhoto(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+            input.addEventListener('change', () => {
+                const file = input.files[0];
+                if (!file) {
+                    preview.removeAttribute('src');
+                    preview.classList.add('hidden');
+                    return;
+                }
+                preview.src = URL.createObjectURL(file);
+                preview.classList.remove('hidden');
+            });
+        }
+        previewPhoto('foto', 'foto-preview');
+        previewPhoto('edit-foto', 'edit-foto-preview');
     </script>
 @endsection

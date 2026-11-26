@@ -9,9 +9,11 @@
 
 ## Membuat commit
 
-Jalankan `bun commit` (atau `npm run commit`). Alur ini men-stage semua perubahan
-repo, menyusun pesan Conventional Commit dari file yang berubah, lalu membuat
-commit otomatis. Push tetap manual.
+Jalankan `bun commit` dari root project. Perintah ini tetap berjalan sebagai
+watcher, menggabungkan simpanan file yang berdekatan, lalu men-stage dan membuat
+commit Conventional Commit otomatis. Perubahan yang sudah ada saat watcher mulai
+juga akan di-commit. Tekan `Ctrl+C` untuk berhenti. Folder dependency, cache,
+hasil build, dan file `.env` tidak dipantau. Push tetap manual.
 
 Contoh: `feat(mahasiswa): tambahkan pencarian berdasarkan nama`
 

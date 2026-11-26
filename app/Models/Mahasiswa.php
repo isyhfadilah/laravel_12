@@ -9,7 +9,7 @@ class Mahasiswa extends Authenticatable
 {
     protected $table = 'mahasiswas';
 
-    protected $fillable = ['nama', 'nim', 'email', 'password'];
+    protected $fillable = ['nama', 'nim', 'email', 'password', 'bio', 'foto'];
 
     protected $hidden = ['password'];
 

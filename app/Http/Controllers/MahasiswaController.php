@@ -47,6 +47,8 @@ class MahasiswaController extends Controller
             'nama' => 'required|string|max:100',
             'nim' => 'required|string|max:20|unique:mahasiswas,nim',
             'email' => 'required|email',
+            'bio' => 'nullable|string',
+            'foto' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ], [
             'nim.unique' => 'NIM tersebut sudah terdaftar. Silakan gunakan NIM lain.',
         ]);

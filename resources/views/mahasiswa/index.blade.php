@@ -306,8 +306,8 @@
                 initializeSummernote('#edit-bio');
             }
             initializeSummernote('#bio');
-            initializePhotoPreview('foto', 'foto-preview', 'foto-placeholder');
-            initializePhotoPreview('edit-foto', 'edit-foto-preview', 'edit-foto-placeholder');
+            initializePhotoPreview('foto', 'foto-preview', 'foto-placeholder', 'foto-filename');
+            initializePhotoPreview('edit-foto', 'edit-foto-preview', 'edit-foto-placeholder', 'edit-foto-filename');
 
             function initializeSummernote(selector) {
                 $(selector).each(function () {

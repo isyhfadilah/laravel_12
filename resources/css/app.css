@@ -155,10 +155,20 @@
 .photo-upload-title { font-size: 13px; font-weight: 850; }
 .photo-upload-help { font-size: 11px; font-weight: 500; color: #515151; }
 .photo-file-input { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0 !important; opacity: 0; cursor: pointer; }
-.photo-picker { position: relative; display: flex; min-height: 92px; align-items: center; gap: 16px; padding: 12px 16px; overflow: hidden; border: 2px solid var(--ink); background: var(--paper); box-shadow: 3px 3px 0 var(--ink); cursor: pointer; transition: background 120ms, box-shadow 120ms, transform 120ms; }
-.photo-picker:hover, .photo-picker:focus-within { background: #f2edff; box-shadow: 4px 4px 0 var(--ink); transform: translate(-1px, -1px); }
-.photo-picker .photo-file-input { z-index: 2; border: 0 !important; padding: 0 !important; background: transparent !important; box-shadow: none !important; }
-.photo-picker .photo-file-input:focus-visible { outline: 3px solid #6b35c5; outline-offset: -5px; }
+.profile-photo-control { display: flex; align-items: center; gap: 16px; }
+.profile-photo-avatar { position: relative; display: block; width: 76px; height: 76px; flex: 0 0 auto; border-radius: 50%; cursor: pointer; }
+.profile-photo-control:focus-within .profile-photo-avatar { outline: 3px solid #6b35c5; outline-offset: 4px; }
+.profile-photo-avatar .photo-avatar-wrap { width: 76px; height: 76px; border-width: 2px; background: var(--purple); box-shadow: 3px 3px 0 var(--ink); }
+.profile-photo-avatar .photo-placeholder-icon { width: 31px; height: 31px; }
+.profile-photo-camera { position: absolute; right: -3px; bottom: -2px; display: grid; width: 27px; height: 27px; place-items: center; border: 2px solid var(--ink); border-radius: 50%; background: var(--yellow); color: var(--ink); font-size: 11px; }
+.profile-photo-copy { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; gap: 4px; }
+.profile-photo-copy > strong { font-size: 14px; font-weight: 850; }
+.profile-photo-copy > span { color: #515151; font-size: 11px; line-height: 1.45; }
+.profile-photo-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 4px; }
+.profile-photo-button { display: inline-flex; min-height: 34px; align-items: center; border: 2px solid var(--ink); background: var(--yellow); padding: 5px 10px; box-shadow: 2px 2px 0 var(--ink); font-size: 12px !important; font-weight: 800 !important; cursor: pointer; }
+.profile-photo-button:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--ink); }
+.profile-photo-filename { max-width: 220px; overflow: hidden; color: #515151; font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.profile-photo-input { position: absolute; width: 1px !important; height: 1px !important; padding: 0 !important; overflow: hidden; clip: rect(0, 0, 0, 0); clip-path: inset(50%); white-space: nowrap; }
 .photo-avatar-wrap { position: relative; display: grid; width: 64px; height: 64px; flex: 0 0 auto; place-items: center; overflow: hidden; border: 2px solid var(--ink); border-radius: 50%; background: var(--yellow); color: var(--ink); box-shadow: 2px 2px 0 var(--purple); }
 .photo-placeholder-icon { width: 29px; height: 29px; }
 .photo-avatar-image { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; border-radius: 50%; object-fit: cover; }

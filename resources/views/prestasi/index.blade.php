@@ -248,8 +248,8 @@
         editPrestasiModal.addEventListener('click', (event) => {
             if (event.target === editPrestasiModal) editPrestasiModal.close();
         });
-        function initializeSummernote() {
-            $('.summernote').each(function () {
+        function initializeSummernote(selector) {
+            $(selector).each(function () {
                 if ($(this).next('.note-editor').length) return;
                 $(this).summernote({
                 height: 180,
@@ -262,17 +262,16 @@
                     ['insert', ['link']],
                     ['view', ['codeview']]
                 ]
-                ]
                 });
             });
         }
 
         function showEditPrestasiModal() {
             editPrestasiModal.showModal();
-            initializeSummernote();
+            initializeSummernote('#edit-deskripsi');
         }
         if (editPrestasiModal.dataset.openOnLoad === 'true') showEditPrestasiModal();
-        else initializeSummernote();
+        initializeSummernote('#deskripsi');
 
         function previewPhoto(inputId, previewId) {
             const input = document.getElementById(inputId);

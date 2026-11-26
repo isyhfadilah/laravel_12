@@ -21,7 +21,6 @@
 
                 <form action="/mahasiswa" method="POST" enctype="multipart/form-data" class="space-y-5">
                     @csrf
-                    <x-validation-errors />
                     <x-form-input id="nama" name="nama" label="Nama lengkap" :value="old('nama')" placeholder="Contoh: Aisyah Putri" required />
                     <x-form-input id="nim" name="nim" label="NIM" :value="old('nim')" placeholder="Contoh: 20240001" required />
                     <x-form-input id="email" name="email" label="Email" type="email" :value="old('email')" placeholder="nama@kampus.ac.id" required />
@@ -270,6 +269,9 @@
                         editFotoCurrent.src = button.dataset.mahasiswaFoto || '';
                         editFotoCurrent.classList.toggle('hidden', !button.dataset.mahasiswaFoto);
                     }
+                    document.getElementById('edit-foto').value = '';
+                    document.getElementById('edit-foto-preview').removeAttribute('src');
+                    document.getElementById('edit-foto-preview').classList.add('hidden');
                     editModal.showModal();
                     initializeSummernote('#edit-bio');
                     $('#edit-bio').summernote('code', button.dataset.mahasiswaBio || '');

@@ -23,16 +23,19 @@
                     @csrf
                     <div>
                         <label for="foto" class="mb-2 block">Foto profil <span class="font-normal text-slate-500">(opsional)</span></label>
-                        <div class="profile-photo-control">
-                            <span class="photo-avatar-wrap">
+                        <label for="foto" class="student-photo-upload">
+                            <span class="student-photo-preview">
                                 <svg id="foto-placeholder" class="photo-placeholder-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="4"/></svg>
-                                <img id="foto-preview" class="photo-avatar-image hidden" alt="Pratinjau foto profil">
+                                <img id="foto-preview" class="student-photo-image hidden" alt="Pratinjau foto profil">
                             </span>
-                            <div class="profile-photo-copy">
-                                <span class="profile-photo-help">JPG, PNG, atau WebP. Maksimal 2 MB.</span>
-                                <input id="foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" class="profile-photo-input">
-                            </div>
-                        </div>
+                            <span class="student-photo-copy">
+                                <span class="student-photo-title">Tambahkan foto profil</span>
+                                <span id="foto-filename" class="student-photo-filename">Belum ada foto dipilih</span>
+                                <span class="student-photo-meta">JPG, PNG, atau WebP <span aria-hidden="true">&middot;</span> Maks. 2 MB</span>
+                                <span class="student-photo-button" aria-hidden="true">Pilih foto</span>
+                            </span>
+                            <input id="foto" name="foto" type="file" accept="image/jpeg,image/png,image/webp" aria-describedby="foto-filename" class="student-photo-input">
+                        </label>
                     </div>
                     <x-form-input id="nama" name="nama" label="Nama lengkap" :value="old('nama')" placeholder="Contoh: Aisyah Putri" required />
                     <x-form-input id="nim" name="nim" label="NIM" :value="old('nim')" placeholder="Contoh: 20240001" required />
@@ -324,6 +327,9 @@
                     preview.src = URL.createObjectURL(file);
                     preview.classList.remove('hidden');
                     placeholder.classList.add('hidden');
+                    if (inputId === 'foto') {
+                        document.getElementById('foto-filename').textContent = file.name;
+                    }
                 });
             }
 

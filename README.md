@@ -19,6 +19,44 @@ cache, hasil build, dan file `.env` tidak dipantau. Push tetap manual.
 
 Example: `feat(mahasiswa): add search by student name`
 
+## Troubleshooting Composer di XAMPP
+
+Saat memasang Filament atau dependency Composer lain, instalasi bisa gagal dengan
+pesan seperti `requires ext-zip` atau `requires ext-intl`. Artinya ekstensi PHP
+tersebut belum aktif untuk PHP CLI yang dipakai Composer. Pesan
+`Installation failed, reverting ./composer.json and ./composer.lock` adalah
+Composer membatalkan perubahan dependency karena instalasi gagal.
+
+Di Windows dengan XAMPP:
+
+1. Jalankan `php --ini` untuk melihat file konfigurasi yang dipakai PHP CLI.
+   Pastikan lokasinya `C:\xampp\php\php.ini` (atau gunakan lokasi yang tampil
+   di hasil perintah).
+2. Buka file tersebut dan aktifkan ekstensi yang disebutkan Composer. Hapus
+   tanda titik koma (`;`) di awal baris. Contohnya:
+
+   ```ini
+   extension=zip
+   extension=intl
+   ```
+
+   Jika baris belum ada, tambahkan di bagian daftar ekstensi.
+3. Simpan file, tutup lalu buka kembali terminal.
+4. Pastikan ekstensi sudah termuat di PHP CLI:
+
+   ```bash
+   php -m | grep -i zip
+   php -m | grep -i intl
+   ```
+
+   Nama ekstensi yang aktif akan tampil pada hasil perintah. Jika tidak tampil,
+   pastikan `php --ini` menunjuk ke file `php.ini` yang tadi diubah.
+5. Jalankan kembali perintah Composer untuk memasang Filament.
+
+Aktifkan ekstensi yang benar-benar diminta Composer; mengabaikan pemeriksaan
+platform dengan `--ignore-platform-req` dapat membuat dependency terpasang
+meskipun ekstensi PHP yang dibutuhkan aplikasi belum tersedia.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
